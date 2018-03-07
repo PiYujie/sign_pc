@@ -34,6 +34,11 @@ module.exports = {
                 test: /\.html$/,
                 use: 'html-loader'
             },
+            //处理sass类型的loader
+            {
+		        test: /\.scss$/,
+		        loaders: 'sass'
+		    },
             // 处理css类型的loader
             {
                 test: /\.css$/,
