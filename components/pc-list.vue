@@ -7,10 +7,9 @@
 					<span>活动管理</span>
 				</p>
 				<ol v-show="num==1">
-					<li>新增活动</li>
-					<li>修改活动信息</li>
-					<li>删除活动</li>
-					<li>显示活动信息</li>
+					<li><a href="#/index/addAct">新增活动</a></li>
+					<li><a href="#/index/showAct">显示活动信息</a></li>
+					<li><a href="#/index/educeAct">导出活动信息</a></li>
 				</ol>
 			</li>
 			<li>
@@ -19,11 +18,9 @@
 					<span>报名管理</span>
 				</p>
 				<ol v-show="num==2">
-					<li>新增报名表</li>
-					<li>修改报名表</li>
-					<li>查询报名表</li>
-					<li>删除报名表</li>
-					<li>导出报名表</li>
+					<li><a href="#/index/addEnroll">新增报名表</a></li>
+					<li><a href="#/index/showEnroll">查询报名表</a></li>
+					<li><a href="#/index/educeEnroll">导出报名表</a></li>
 				</ol>
 			</li>
 			<li>
@@ -32,9 +29,8 @@
 					<span>签到管理</span>
 				</p>
 				<ol v-show="num==3">
-					<li>查询签到情况</li>
-					<li>导出签到信息</li>
-					<li>设置签到时间</li>
+					<li><a href="#/index/showSign">查询签到情况</a></li>
+					<li><a href="#/index/educeSign">导出签到信息</a></li>
 				</ol>
 			</li>
 			<li>
@@ -43,20 +39,32 @@
 					<span>学生管理</span>
 				</p>
 				<ol v-show="num==4">
-					<li>新生入学</li>
-					<li>学生休学</li>
-					<li>修改信息</li>
+					<li><a href="#/index/addStu">新生入学</a></li>
+					<li><a href="#/index/deleteStu">学生休学</a></li>
+					<li><a href="#/index/changeStu">修改信息</a></li>
 				</ol>
 			</li>
 			<li>
 				<p @click="toShow(5)">
 					<img src="/img/font/siginin2.svg" />
-					<span>账户管理</span>
+					<span>院系管理</span>
 				</p>
 				<ol v-show="num == 5">
-					<li>个人信息管理</li>
+					<li><a href="#/index/academy">学院管理</a></li>
+					<li><a href="#/index/major">专业管理</a></li>
 				</ol>
 			</li>
+			<li>
+				<p @click="toShow(6)">
+					<img src="/img/font/siginin2.svg" />
+					<span>账户管理</span>
+				</p>
+				<ol v-show="num == 6">
+					<li><a href="#/index/showMan">活动管理员管理</a></li>
+					<li><a href="#/index/showOwn">个人信息管理</a></li>
+				</ol>
+			</li>
+			
 		</ul>
 	</div>
 </template>
@@ -71,22 +79,6 @@
 		methods:{
 			toShow(id){
 				this.num = id;
-				switch(id){
-					case 2:
-						location.href = "#/index/enroll"
-					break;
-					case 3:
-					
-					break;
-					case 4:
-					break;
-					case 5:
-						location.href = "#/index/account"
-					break;
-					default:
-						location.href = "#/index/activity"
-					break;
-				}
 			}
 		}
 	}
@@ -124,5 +116,11 @@
 		height: 30px;
 		font: 14px/30px "微软雅黑";
 		/*background-color: rgba(0,0,0,0.4);*/
+	}
+	a{
+		color: #fff;
+	}
+	a:hover{
+		color: #FFA500;
 	}
 </style>

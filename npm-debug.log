@@ -1,0 +1,260 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'D:\\Node\\node.exe',
+1 verbose cli   'D:\\Node\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install',
+1 verbose cli   'url-loader/cnpm',
+1 verbose cli   'install',
+1 verbose cli   'url-loader',
+1 verbose cli   '-D' ]
+2 info using npm@3.10.10
+3 info using node@v6.10.3
+4 silly loadCurrentTree Starting
+5 silly install loadCurrentTree
+6 silly install readLocalPackageData
+7 silly fetchPackageMetaData url-loader/cnpm
+8 silly fetchPackageMetaData install
+9 silly fetchPackageMetaData url-loader@^0.6.2
+10 silly fetchNamedPackageData url-loader
+11 silly mapToRegistry name url-loader
+12 silly mapToRegistry using default registry
+13 silly mapToRegistry registry https://registry.npmjs.org/
+14 silly mapToRegistry data Result {
+14 silly mapToRegistry   raw: 'url-loader',
+14 silly mapToRegistry   scope: null,
+14 silly mapToRegistry   escapedName: 'url-loader',
+14 silly mapToRegistry   name: 'url-loader',
+14 silly mapToRegistry   rawSpec: '',
+14 silly mapToRegistry   spec: 'latest',
+14 silly mapToRegistry   type: 'tag' }
+15 silly mapToRegistry uri https://registry.npmjs.org/url-loader
+16 silly fetchOtherPackageData url-loader/cnpm
+17 silly cache add args [ 'url-loader/cnpm', null ]
+18 verbose cache add spec url-loader/cnpm
+19 silly fetchNamedPackageData install
+20 silly mapToRegistry name install
+21 silly mapToRegistry using default registry
+22 silly mapToRegistry registry https://registry.npmjs.org/
+23 silly mapToRegistry data Result {
+23 silly mapToRegistry   raw: 'install',
+23 silly mapToRegistry   scope: null,
+23 silly mapToRegistry   escapedName: 'install',
+23 silly mapToRegistry   name: 'install',
+23 silly mapToRegistry   rawSpec: '',
+23 silly mapToRegistry   spec: 'latest',
+23 silly mapToRegistry   type: 'tag' }
+24 silly mapToRegistry uri https://registry.npmjs.org/install
+25 silly cache add parsed spec Result {
+25 silly cache add   raw: 'url-loader/cnpm',
+25 silly cache add   scope: null,
+25 silly cache add   escapedName: null,
+25 silly cache add   name: null,
+25 silly cache add   rawSpec: 'url-loader/cnpm',
+25 silly cache add   spec: 'github:url-loader/cnpm',
+25 silly cache add   type: 'hosted',
+25 silly cache add   hosted:
+25 silly cache add    { type: 'github',
+25 silly cache add      ssh: 'git@github.com:url-loader/cnpm.git',
+25 silly cache add      sshUrl: 'git+ssh://git@github.com/url-loader/cnpm.git',
+25 silly cache add      httpsUrl: 'git+https://github.com/url-loader/cnpm.git',
+25 silly cache add      gitUrl: 'git://github.com/url-loader/cnpm.git',
+25 silly cache add      shortcut: 'github:url-loader/cnpm',
+25 silly cache add      directUrl: 'https://raw.githubusercontent.com/url-loader/cnpm/master/package.json' } }
+26 verbose addRemoteGit caching url-loader/cnpm
+27 verbose addRemoteGit url-loader/cnpm is a repository hosted by github
+28 silly tryGitProto attempting to clone git://github.com/url-loader/cnpm.git
+29 silly tryClone cloning url-loader/cnpm via git://github.com/url-loader/cnpm.git
+30 verbose tryClone git-github-com-url-loader-cnpm-git-44ee19da not in flight; caching
+31 verbose correctMkdir C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes correctMkdir not in flight; initializing
+32 verbose makeDirectory C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes creation not in flight; initializing
+33 verbose makeCacheDir UID & GID are irrelevant on win32
+34 info git [ 'clone',
+34 info git   '--template=C:\\Users\\pyj\\AppData\\Roaming\\npm-cache\\_git-remotes\\_templates',
+34 info git   '--mirror',
+34 info git   'git://github.com/url-loader/cnpm.git',
+34 info git   'C:\\Users\\pyj\\AppData\\Roaming\\npm-cache\\_git-remotes\\git-github-com-url-loader-cnpm-git-44ee19da' ]
+35 verbose request uri https://registry.npmjs.org/install
+36 verbose request no auth needed
+37 info attempt registry request try #1 at 17:29:52
+38 verbose request id 6bba10153f865ab9
+39 http request GET https://registry.npmjs.org/install
+40 verbose request uri https://registry.npmjs.org/url-loader
+41 verbose request no auth needed
+42 info attempt registry request try #1 at 17:29:52
+43 verbose etag "5a4e957e-6a53"
+44 verbose lastModified Thu, 4 Jan 2018 20:58:38 GMT
+45 http request GET https://registry.npmjs.org/url-loader
+46 verbose git clone --template=C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\_templates --mirror git://github.com/url-loader/cnpm.git C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-github-com-url-loader-cnpm-git-44ee19da: Cloning into bare repository 'C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-github-com-url-loader-cnpm-git-44ee19da'...
+46 verbose git clone --template=C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\_templates --mirror git://github.com/url-loader/cnpm.git C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-github-com-url-loader-cnpm-git-44ee19da: fatal: remote error:
+46 verbose git clone --template=C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\_templates --mirror git://github.com/url-loader/cnpm.git C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-github-com-url-loader-cnpm-git-44ee19da:   Repository not found.
+47 silly tryHTTPS attempting to clone git+https://github.com/url-loader/cnpm.git
+48 silly tryClone cloning url-loader/cnpm via git+https://github.com/url-loader/cnpm.git
+49 verbose tryClone git-https-github-com-url-loader-cnpm-git-a78ced40 not in flight; caching
+50 verbose correctMkdir C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes correctMkdir not in flight; initializing
+51 info git [ 'clone',
+51 info git   '--template=C:\\Users\\pyj\\AppData\\Roaming\\npm-cache\\_git-remotes\\_templates',
+51 info git   '--mirror',
+51 info git   'https://github.com/url-loader/cnpm.git',
+51 info git   'C:\\Users\\pyj\\AppData\\Roaming\\npm-cache\\_git-remotes\\git-https-github-com-url-loader-cnpm-git-a78ced40' ]
+52 http 200 https://registry.npmjs.org/install
+53 verbose headers { 'content-type': 'application/json; charset=UTF-8',
+53 verbose headers   server: 'UploadServer',
+53 verbose headers   'cache-control': 'max-age=300',
+53 verbose headers   'last-modified': 'Fri, 23 Mar 2018 2:14:35 GMT',
+53 verbose headers   etag: '"5ab4630b-13020"',
+53 verbose headers   'x-npm-region': 'Asia',
+53 verbose headers   'content-encoding': 'gzip',
+53 verbose headers   'content-length': '9580',
+53 verbose headers   'accept-ranges': 'bytes',
+53 verbose headers   date: 'Tue, 03 Apr 2018 09:29:56 GMT',
+53 verbose headers   via: '1.1 varnish',
+53 verbose headers   age: '707',
+53 verbose headers   connection: 'keep-alive',
+53 verbose headers   'x-served-by': 'cache-nrt6128-NRT',
+53 verbose headers   'x-cache': 'HIT',
+53 verbose headers   'x-cache-hits': '2',
+53 verbose headers   'x-timer': 'S1522747796.155757,VS0,VE0',
+53 verbose headers   vary: 'Accept-Encoding, Accept' }
+54 silly get cb [ 200,
+54 silly get   { 'content-type': 'application/json; charset=UTF-8',
+54 silly get     server: 'UploadServer',
+54 silly get     'cache-control': 'max-age=300',
+54 silly get     'last-modified': 'Fri, 23 Mar 2018 2:14:35 GMT',
+54 silly get     etag: '"5ab4630b-13020"',
+54 silly get     'x-npm-region': 'Asia',
+54 silly get     'content-encoding': 'gzip',
+54 silly get     'content-length': '9580',
+54 silly get     'accept-ranges': 'bytes',
+54 silly get     date: 'Tue, 03 Apr 2018 09:29:56 GMT',
+54 silly get     via: '1.1 varnish',
+54 silly get     age: '707',
+54 silly get     connection: 'keep-alive',
+54 silly get     'x-served-by': 'cache-nrt6128-NRT',
+54 silly get     'x-cache': 'HIT',
+54 silly get     'x-cache-hits': '2',
+54 silly get     'x-timer': 'S1522747796.155757,VS0,VE0',
+54 silly get     vary: 'Accept-Encoding, Accept' } ]
+55 verbose get saving install to C:\Users\pyj\AppData\Roaming\npm-cache\registry.npmjs.org\install\.cache.json
+56 verbose correctMkdir C:\Users\pyj\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+57 http 200 https://registry.npmjs.org/url-loader
+58 verbose headers { 'content-type': 'application/json; charset=UTF-8',
+58 verbose headers   server: 'UploadServer',
+58 verbose headers   'cache-control': 'max-age=300',
+58 verbose headers   'last-modified': 'Mon, 2 Apr 2018 4:26:17 GMT',
+58 verbose headers   etag: '"5ac1b0e9-847a"',
+58 verbose headers   'x-npm-region': 'Asia',
+58 verbose headers   'content-encoding': 'gzip',
+58 verbose headers   'content-length': '6459',
+58 verbose headers   'accept-ranges': 'bytes',
+58 verbose headers   date: 'Tue, 03 Apr 2018 09:29:56 GMT',
+58 verbose headers   via: '1.1 varnish',
+58 verbose headers   age: '2585',
+58 verbose headers   connection: 'keep-alive',
+58 verbose headers   'x-served-by': 'cache-nrt6127-NRT',
+58 verbose headers   'x-cache': 'HIT',
+58 verbose headers   'x-cache-hits': '4',
+58 verbose headers   'x-timer': 'S1522747796.163835,VS0,VE0',
+58 verbose headers   vary: 'Accept-Encoding, Accept' }
+59 silly get cb [ 200,
+59 silly get   { 'content-type': 'application/json; charset=UTF-8',
+59 silly get     server: 'UploadServer',
+59 silly get     'cache-control': 'max-age=300',
+59 silly get     'last-modified': 'Mon, 2 Apr 2018 4:26:17 GMT',
+59 silly get     etag: '"5ac1b0e9-847a"',
+59 silly get     'x-npm-region': 'Asia',
+59 silly get     'content-encoding': 'gzip',
+59 silly get     'content-length': '6459',
+59 silly get     'accept-ranges': 'bytes',
+59 silly get     date: 'Tue, 03 Apr 2018 09:29:56 GMT',
+59 silly get     via: '1.1 varnish',
+59 silly get     age: '2585',
+59 silly get     connection: 'keep-alive',
+59 silly get     'x-served-by': 'cache-nrt6127-NRT',
+59 silly get     'x-cache': 'HIT',
+59 silly get     'x-cache-hits': '4',
+59 silly get     'x-timer': 'S1522747796.163835,VS0,VE0',
+59 silly get     vary: 'Accept-Encoding, Accept' } ]
+60 verbose get saving url-loader to C:\Users\pyj\AppData\Roaming\npm-cache\registry.npmjs.org\url-loader\.cache.json
+61 verbose correctMkdir C:\Users\pyj\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+62 verbose git clone --template=C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\_templates --mirror https://github.com/url-loader/cnpm.git C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-https-github-com-url-loader-cnpm-git-a78ced40: Cloning into bare repository 'C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-https-github-com-url-loader-cnpm-git-a78ced40'...
+62 verbose git clone --template=C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\_templates --mirror https://github.com/url-loader/cnpm.git C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-https-github-com-url-loader-cnpm-git-a78ced40: fatal: TaskCanceledException encountered.
+62 verbose git clone --template=C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\_templates --mirror https://github.com/url-loader/cnpm.git C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-https-github-com-url-loader-cnpm-git-a78ced40:    ��ȡ��һ��������
+62 verbose git clone --template=C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\_templates --mirror https://github.com/url-loader/cnpm.git C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-https-github-com-url-loader-cnpm-git-a78ced40: remote: Invalid username or password.
+62 verbose git clone --template=C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\_templates --mirror https://github.com/url-loader/cnpm.git C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-https-github-com-url-loader-cnpm-git-a78ced40: fatal: Authentication failed for 'https://github.com/url-loader/cnpm.git/'
+63 silly trySSH attempting to clone git@github.com:url-loader/cnpm.git
+64 silly tryClone cloning url-loader/cnpm via git@github.com:url-loader/cnpm.git
+65 verbose tryClone git-github-com-url-loader-cnpm-git-8e7ab11d not in flight; caching
+66 verbose correctMkdir C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes correctMkdir not in flight; initializing
+67 info git [ 'clone',
+67 info git   '--template=C:\\Users\\pyj\\AppData\\Roaming\\npm-cache\\_git-remotes\\_templates',
+67 info git   '--mirror',
+67 info git   'git@github.com:url-loader/cnpm.git',
+67 info git   'C:\\Users\\pyj\\AppData\\Roaming\\npm-cache\\_git-remotes\\git-github-com-url-loader-cnpm-git-8e7ab11d' ]
+68 error git clone --template=C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\_templates --mirror git@github.com:url-loader/cnpm.git C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-github-com-url-loader-cnpm-git-8e7ab11d: Cloning into bare repository 'C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-github-com-url-loader-cnpm-git-8e7ab11d'...
+68 error git clone --template=C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\_templates --mirror git@github.com:url-loader/cnpm.git C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-github-com-url-loader-cnpm-git-8e7ab11d: ERROR: Repository not found.
+68 error git clone --template=C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\_templates --mirror git@github.com:url-loader/cnpm.git C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-github-com-url-loader-cnpm-git-8e7ab11d: fatal: Could not read from remote repository.
+68 error git clone --template=C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\_templates --mirror git@github.com:url-loader/cnpm.git C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-github-com-url-loader-cnpm-git-8e7ab11d:
+68 error git clone --template=C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\_templates --mirror git@github.com:url-loader/cnpm.git C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-github-com-url-loader-cnpm-git-8e7ab11d: Please make sure you have the correct access rights
+68 error git clone --template=C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\_templates --mirror git@github.com:url-loader/cnpm.git C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-github-com-url-loader-cnpm-git-8e7ab11d: and the repository exists.
+69 silly fetchPackageMetaData Error: Command failed: git -c core.longpaths=true clone --template=C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\_templates --mirror git@github.com:url-loader/cnpm.git C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-github-com-url-loader-cnpm-git-8e7ab11d
+69 silly fetchPackageMetaData Cloning into bare repository 'C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-github-com-url-loader-cnpm-git-8e7ab11d'...
+69 silly fetchPackageMetaData ERROR: Repository not found.
+69 silly fetchPackageMetaData fatal: Could not read from remote repository.
+69 silly fetchPackageMetaData
+69 silly fetchPackageMetaData Please make sure you have the correct access rights
+69 silly fetchPackageMetaData and the repository exists.
+69 silly fetchPackageMetaData
+69 silly fetchPackageMetaData     at ChildProcess.exithandler (child_process.js:204:12)
+69 silly fetchPackageMetaData     at emitTwo (events.js:106:13)
+69 silly fetchPackageMetaData     at ChildProcess.emit (events.js:191:7)
+69 silly fetchPackageMetaData     at maybeClose (internal/child_process.js:886:16)
+69 silly fetchPackageMetaData     at Process.ChildProcess._handle.onexit (internal/child_process.js:226:5)
+69 silly fetchPackageMetaData  error for url-loader/cnpm { Error: Command failed: git -c core.longpaths=true clone --template=C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\_templates --mirror git@github.com:url-loader/cnpm.git C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-github-com-url-loader-cnpm-git-8e7ab11d
+69 silly fetchPackageMetaData Cloning into bare repository 'C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-github-com-url-loader-cnpm-git-8e7ab11d'...
+69 silly fetchPackageMetaData ERROR: Repository not found.
+69 silly fetchPackageMetaData fatal: Could not read from remote repository.
+69 silly fetchPackageMetaData
+69 silly fetchPackageMetaData Please make sure you have the correct access rights
+69 silly fetchPackageMetaData and the repository exists.
+69 silly fetchPackageMetaData
+69 silly fetchPackageMetaData     at ChildProcess.exithandler (child_process.js:204:12)
+69 silly fetchPackageMetaData     at emitTwo (events.js:106:13)
+69 silly fetchPackageMetaData     at ChildProcess.emit (events.js:191:7)
+69 silly fetchPackageMetaData     at maybeClose (internal/child_process.js:886:16)
+69 silly fetchPackageMetaData     at Process.ChildProcess._handle.onexit (internal/child_process.js:226:5)
+69 silly fetchPackageMetaData   killed: false,
+69 silly fetchPackageMetaData   code: 128,
+69 silly fetchPackageMetaData   signal: null,
+69 silly fetchPackageMetaData   cmd: 'git -c core.longpaths=true clone --template=C:\\Users\\pyj\\AppData\\Roaming\\npm-cache\\_git-remotes\\_templates --mirror git@github.com:url-loader/cnpm.git C:\\Users\\pyj\\AppData\\Roaming\\npm-cache\\_git-remotes\\git-github-com-url-loader-cnpm-git-8e7ab11d' }
+70 silly rollbackFailedOptional Starting
+71 silly rollbackFailedOptional Finishing
+72 silly runTopLevelLifecycles Finishing
+73 silly install printInstalled
+74 verbose stack Error: Command failed: git -c core.longpaths=true clone --template=C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\_templates --mirror git@github.com:url-loader/cnpm.git C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-github-com-url-loader-cnpm-git-8e7ab11d
+74 verbose stack Cloning into bare repository 'C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-github-com-url-loader-cnpm-git-8e7ab11d'...
+74 verbose stack ERROR: Repository not found.
+74 verbose stack fatal: Could not read from remote repository.
+74 verbose stack
+74 verbose stack Please make sure you have the correct access rights
+74 verbose stack and the repository exists.
+74 verbose stack
+74 verbose stack     at ChildProcess.exithandler (child_process.js:204:12)
+74 verbose stack     at emitTwo (events.js:106:13)
+74 verbose stack     at ChildProcess.emit (events.js:191:7)
+74 verbose stack     at maybeClose (internal/child_process.js:886:16)
+74 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:226:5)
+75 verbose cwd D:\xampp\htdocs\sign-pc
+76 error Windows_NT 6.3.9600
+77 error argv "D:\\Node\\node.exe" "D:\\Node\\node_modules\\npm\\bin\\npm-cli.js" "install" "url-loader/cnpm" "install" "url-loader" "-D"
+78 error node v6.10.3
+79 error npm  v3.10.10
+80 error code 128
+81 error Command failed: git -c core.longpaths=true clone --template=C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\_templates --mirror git@github.com:url-loader/cnpm.git C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-github-com-url-loader-cnpm-git-8e7ab11d
+81 error Cloning into bare repository 'C:\Users\pyj\AppData\Roaming\npm-cache\_git-remotes\git-github-com-url-loader-cnpm-git-8e7ab11d'...
+81 error ERROR: Repository not found.
+81 error fatal: Could not read from remote repository.
+81 error
+81 error Please make sure you have the correct access rights
+81 error and the repository exists.
+82 error If you need help, you may report this error at:
+82 error     <https://github.com/npm/npm/issues>
+83 verbose exit [ 1, true ]

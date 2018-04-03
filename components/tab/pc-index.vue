@@ -6,10 +6,12 @@
 				<p><span>你好，wmtimes!</span><img src="/img/font/exit.svg"/></p>
 				<em>站内公告：【维护】进行维护通知</em>
 			</div>
-			<xlist />
-			<router-view></router-view>
+			<div class="cont">
+				<xlist />
+				<router-view></router-view>
+			</div>
+			
 		</div>
-		
 		<xfooter />
 	</div>
 </template>
@@ -58,5 +60,9 @@
 		float: right;
 		font-style: normal;
 		padding-right: 15px;
+	}
+	.cont{
+		width: 100%;
+		min-height: 460px;
 	}
 </style>

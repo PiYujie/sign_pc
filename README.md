@@ -75,7 +75,7 @@
 |列名|类型|长度|描述|
 |-|-|-|-|
 |up_id|varchar|10|报名编号，主键|
-|up_type|varchar|15|报名类型：考试、竞赛、社团|
+|up_type|varchar|15|报名类型：考试0、竞赛1|
 |status|varchar|20|报名状态：审核中、报名成功、报名失败|
 |stu_id|varchar|11|学号|
 |sign_in|int|1|签到，0：未签到；1：签到成功；2：无效签到|
