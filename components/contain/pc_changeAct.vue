@@ -15,40 +15,51 @@
 						<option value="t8">创业教育</option>
 					</select>
 				</p>
-				<p><span>举行地点：</span><input type="text" /></p>
-				<p><span>活动开始时间：</span><input type="text" /></p>
-				<p><span>活动结束时间：</span><input type="text" /></p>
-				<p><span>所需人数：</span><input type="text" /></p>
+				<p><span>活动开始时间：</span><date-picker field="myDate" placeholder="开始时间" v-model="date" format="yyyy/mm/dd" :backward="false" :no-today="true" :forward="true"></date-picker></p>
+				<p><span>活动结束时间：</span><date-picker field="myDateStop" placeholder="截止时间" v-model="date1" format="yyyy/mm/dd" :backward="false" :no-today="true" :forward="true"></date-picker></p>
+				<p><span>专业要求：</span>
+					<select name="actType">
+						<option value="t1" selected="selected">考试预约</option>
+						<option value="t2">学术讲座</option>
+						<option value="t3">科技创新</option>
+						<option value="t4">文化活动</option>
+						<option value="t5">科学竞赛</option>
+						<option value="t6">学术讲座</option>
+						<option value="t7">名著阅读</option>
+						<option value="t8">创业教育</option>
+					</select>
+					<select name="actType">
+						<option value="t1" selected="selected">考试预约</option>
+						<option value="t2">学术讲座</option>
+						<option value="t3">科技创新</option>
+						<option value="t4">文化活动</option>
+						<option value="t5">科学竞赛</option>
+						<option value="t6">学术讲座</option>
+						<option value="t7">名著阅读</option>
+						<option value="t8">创业教育</option>
+					</select>
+				</p>
+				<!--<p><span>学院要求：</span>
+					<select name="actType">
+						<option value="t1" selected="selected">考试预约</option>
+						<option value="t2">学术讲座</option>
+						<option value="t3">科技创新</option>
+						<option value="t4">文化活动</option>
+						<option value="t5">科学竞赛</option>
+						<option value="t6">学术讲座</option>
+						<option value="t7">名著阅读</option>
+						<option value="t8">创业教育</option>
+					</select>
+				</p>-->
 				<p><span>主办单位：</span><input type="text" /></p>
-				<p><span>报名条件：</span>
-					<select name="actType">
-						<option value="t1" selected="selected">考试预约</option>
-						<option value="t2">学术讲座</option>
-						<option value="t3">科技创新</option>
-						<option value="t4">文化活动</option>
-						<option value="t5">科学竞赛</option>
-						<option value="t6">学术讲座</option>
-						<option value="t7">名著阅读</option>
-						<option value="t8">创业教育</option>
-					</select>
-					<select name="actType">
-						<option value="t1" selected="selected">考试预约</option>
-						<option value="t2">学术讲座</option>
-						<option value="t3">科技创新</option>
-						<option value="t4">文化活动</option>
-						<option value="t5">科学竞赛</option>
-						<option value="t6">学术讲座</option>
-						<option value="t7">名著阅读</option>
-						<option value="t8">创业教育</option>
-					</select>
-				</p>
-				<p><span>活动奖励：</span>
+				<p><span>所需人数：</span><input type="text" /></p>
+				<p><span>义工奖励：</span>
 					<input type="text" />
-					<select name="actReward" class="actReward">
-						<option value="r1" selected="selected">学分</option>
-						<option value="r2">义工</option>
-					</select>
 				</p>
+				<p><span>学分奖励：</span>
+					<input type="text" />
+				</p>
+				<p><span>举行地点：</span><input type="text" /></p>
 				<p class="allWidth"><span>活动内容：</span><textarea name="cont" rows="8" cols="87"></textarea></p>
 			</div>
 			<button>提交</button>
@@ -57,6 +68,20 @@
 </template>
 
 <script>
+	import 'babel-polyfill'; //因为使用了es6的一些方法，需要babel垫片，如果你项目中已有相关兼容性方案，可忽略
+	import Vue from 'vue';
+	import myDatepicker from 'vue-datepicker-simple/datepicker-2.vue'; //引入对应的组件
+	export default{
+		data(){
+			return {
+				date:'',
+				date1:''
+			}
+		},
+		components:{
+			'date-picker': myDatepicker
+		}
+	}
 </script>
 
 <style scoped="scoped">
@@ -77,7 +102,7 @@
 	}
 	.changeAct p {
 		float: left;
-		width: 400px;
+		width: 375px;
 		padding: 5px 0;
 		/*height: 26px;*/
 		font: 12px/26px "微软雅黑";
@@ -92,8 +117,8 @@
 	.changeAct p input {
 		float: left;
 		height: 26px;
-		width: 220px;
-		padding-left: 10px;
+		width: 245px;
+		padding-left: 6px;
 	}
 	/*单选按钮*/
 	
@@ -101,12 +126,6 @@
 		padding: 0;
 		width: 15px;
 		height: 15px;
-	}
-	
-	.changeAct div {
-		width: 100%;
-		overflow: hidden;
-		zoom: 1;
 	}
 	/*文本域*/
 	.changeAct .allWidth {
@@ -132,5 +151,13 @@
 		background-color: rgba(255,100,0,0.4);
 		border-radius: 8px;
 		cursor: pointer;
+	}
+</style>
+<style type="text/css">
+	.vue-datepicker {
+		float: left;
+	}
+	.vue-datepicker input{
+		border: none !important;
 	}
 </style>

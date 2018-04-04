@@ -7,7 +7,7 @@
 					<input type="radio" name="sex" id="sex" value="1" checked="checked"/>男
 					<input type="radio" name="sex" id="sex" value="0" />女
 				</p>
-				<p><span>生日：</span><input type="text" /></p>
+				<p><span>生日：</span><date-picker field="myDate" placeholder="出生日期" v-model="date" format="yyyy/mm/dd" :backward="true" :no-today="true" :forward="false"></date-picker></p>
 				<p><span>身份证号：</span><input type="text" /></p>
 				<p><span>班级：</span><input type="text" /></p>
 				<p><span>学院：</span>
@@ -40,6 +40,19 @@
 </template>
 
 <script>
+	import 'babel-polyfill'; //因为使用了es6的一些方法，需要babel垫片，如果你项目中已有相关兼容性方案，可忽略
+	import Vue from 'vue';
+	import myDatepicker from 'vue-datepicker-simple/datepicker-2.vue'; //引入对应的组件
+	export default{
+		data(){
+			return {
+				date:''
+			}
+		},
+		components:{
+			'date-picker': myDatepicker
+		}
+	}
 </script>
 
 <style scoped="scoped">
@@ -76,8 +89,8 @@
 	.addAct p input[type="text"] {
 		float: left;
 		height: 26px;
-		width: 300px;
-		padding-left: 10px;
+		width: 245px;
+		padding-left: 6px;
 	}
 	/*单选按钮*/
 	
@@ -86,12 +99,12 @@
 		width: 15px;
 		height: 15px;
 	}
-	
+/*	/*
 	.addAct div {
 		width: 100%;
 		overflow: hidden;
 		zoom: 1;
-	}
+	}*/
 	/*文本域*/
 	
 	.addAct .allWidth {
@@ -119,4 +132,9 @@
 		cursor: pointer;
 	}
 	
+</style>
+<style type="text/css">
+	.vue-datepicker {
+		float: left;
+	}
 </style>

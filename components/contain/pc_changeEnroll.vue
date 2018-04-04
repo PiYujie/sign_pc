@@ -7,13 +7,11 @@
 		</p>
 		<p>
 			<span>报名开始时间：</span>
-			<input type="text" name="begin_time" id="begin_time" />
-			<i>0</i>
+			<date-picker field="myDate" placeholder="开始时间" v-model="date" format="yyyy/mm/dd" :backward="false" :no-today="true" :forward="true"></date-picker>
 		</p>
 		<p>
 			<span>报名截止时间：</span>
-			<input type="text" name="stop_time" id="stop_time" />
-			<i>0</i>
+			<date-picker field="myDate" placeholder="截止时间" v-model="date1" format="yyyy/mm/dd" :backward="false" :no-today="true" :forward="true"></date-picker>
 		</p>
 		<p>
 			<span>是否需要进行签到：</span>
@@ -25,6 +23,20 @@
 </template>
 
 <script>
+	import 'babel-polyfill'; //因为使用了es6的一些方法，需要babel垫片，如果你项目中已有相关兼容性方案，可忽略
+	import Vue from 'vue';
+	import myDatepicker from 'vue-datepicker-simple/datepicker-2.vue'; //引入对应的组件
+	export default{
+		data(){
+			return {
+				date:'',
+				date1:''
+			}
+		},
+		components:{
+			'date-picker': myDatepicker
+		}
+	}
 </script>
 
 <style scoped="scoped">
@@ -95,5 +107,10 @@
 	
 	table tr {
 		height: 28px;
+	}
+	/*时间选择器*/
+	.vue-datepicker{
+		float: left;
+    	top: 15px;
 	}
 </style>
