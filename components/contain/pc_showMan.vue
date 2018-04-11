@@ -8,49 +8,9 @@
 					<th>发布者姓名</th>
 					<th>操作</th>
 				</tr>
-				<tr>
-					<td>1</td>
-					<td>计算机科学与技术</td>
-					<td @click="deleteAca" class="toClick">删除</td>
-				</tr>
-				<tr>
-					<td>2</td>
-					<td>计算机科学与技术</td>
-					<td @click="deleteAca" class="toClick">删除</td>
-				</tr>
-				<tr>
-					<td>3</td>
-					<td>计算机科学与技术</td>
-					<td @click="deleteAca" class="toClick">删除</td>
-				</tr>
-				<tr>
-					<td>4</td>
-					<td>计算机科学与技术</td>
-					<td @click="deleteAca" class="toClick">删除</td>
-				</tr>
-				<tr>
-					<td>5</td>
-					<td>计算机科学与技术</td>
-					<td @click="deleteAca" class="toClick">删除</td>
-				</tr>
-				<tr>
-					<td>6</td>
-					<td>计算机科学与技术</td>
-					<td @click="deleteAca" class="toClick">删除</td>
-				</tr>
-				<tr>
-					<td>7</td>
-					<td>计算机科学与技术</td>
-					<td @click="deleteAca" class="toClick">删除</td>
-				</tr>
-				<tr>
-					<td>8</td>
-					<td>计算机科学与技术</td>
-					<td @click="deleteAca" class="toClick">删除</td>
-				</tr>
-				<tr>
-					<td>9</td>
-					<td>计算机科学与技术</td>
+				<tr v-for="v in arr">
+					<td>{{v.id}}</td>
+					<td>{{v.name}}</td>
 					<td @click="deleteAca" class="toClick">删除</td>
 				</tr>
 			</table>
@@ -76,11 +36,13 @@
 </template>
 
 <script>
+	import $ from 'jQuery';
 	export default {
 		data() {
 			return {
 				isShow: false,
-				isDelete: false
+				isDelete: false,
+				arr:''
 			}
 		},
 		methods: {
@@ -90,6 +52,33 @@
 			deleteAca() {
 				this.isDelete = !this.isDelete
 			}
+		},
+		mounted(){
+			var _this = this;
+			var arr = [];
+			$.ajax({
+				type:"post",
+				url:"http://localhost:3000/getMan",
+				success(data){
+					data = JSON.parse(data);
+					if(data.length!=0){
+						for (var i in data) {
+							var id = data[i].man_id;
+							var name = data[i].man_name;
+							var type = data[i].man_type;
+							var datas = {};
+							if(type==1){
+								datas.id = id;
+								datas.name = name;
+								datas.type = type;
+								arr.push(datas)
+							}
+						}
+						_this.arr = arr;
+					}
+//					console.log(data)
+				}
+			});
 		}
 	}
 </script>

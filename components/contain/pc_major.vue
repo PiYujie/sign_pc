@@ -9,68 +9,12 @@
 					<th>所属学院</th>
 					<th colspan="2">操作</th>
 				</tr>
-				<tr>
-					<td>1</td>
-					<td>计算机科学与技术</td>
-					<td>电气与信息工程学院</td>
+				<tr v-for="v in arr">
+					<td>{{v.major_id}}</td>
+					<td>{{v.major_name}}</td>
+					<td>{{v.aca_name}}</td>
 					<td @click="changeAca" class="toClick">修改</td>
 					<td @click="deleteAca" class="toClick">删除</td>
-				</tr>
-				<tr>
-					<td>2</td>
-					<td>计算机科学与技术</td>
-					<td>电气与信息工程学院</td>
-					<td @click="changeAca">重命名</td>
-					<td @click="deleteAca">删除</td>
-				</tr>
-				<tr>
-					<td>3</td>
-					<td>计算机科学与技术</td>
-					<td>电气与信息工程学院</td>
-					<td @click="changeAca">重命名</td>
-					<td @click="deleteAca">删除</td>
-				</tr>
-				<tr>
-					<td>4</td>
-					<td>计算机科学与技术</td>
-					<td>电气与信息工程学院</td>
-					<td @click="changeAca">重命名</td>
-					<td @click="deleteAca">删除</td>
-				</tr>
-				<tr>
-					<td>5</td>
-					<td>计算机科学与技术</td>
-					<td>电气与信息工程学院</td>
-					<td @click="changeAca">重命名</td>
-					<td @click="deleteAca">删除</td>
-				</tr>
-				<tr>
-					<td>6</td>
-					<td>计算机科学与技术</td>
-					<td>电气与信息工程学院</td>
-					<td @click="changeAca">重命名</td>
-					<td @click="deleteAca">删除</td>
-				</tr>
-				<tr>
-					<td>7</td>
-					<td>计算机科学与技术</td>
-					<td>电气与信息工程学院</td>
-					<td @click="changeAca">重命名</td>
-					<td @click="deleteAca">删除</td>
-				</tr>
-				<tr>
-					<td>8</td>
-					<td>计算机科学与技术</td>
-					<td>电气与信息工程学院</td>
-					<td @click="changeAca">重命名</td>
-					<td @click="deleteAca">删除</td>
-				</tr>
-				<tr>
-					<td>9</td>
-					<td>计算机科学与技术</td>
-					<td>电气与信息工程学院</td>
-					<td @click="changeAca">重命名</td>
-					<td @click="deleteAca">删除</td>
 				</tr>
 			</table>
 		</div>
@@ -105,20 +49,30 @@
 				<p><span>确定</span><span @click="deleteAca">取消</span></p>
 			</div>
 		</div>
-		<div class="page">
-			<i>上一页</i><em>1</em><em>2</em><em>3</em><em>···</em><em>11</em><em>12</em><i>下一页</i>
-		</div>
+		<Xpage :total-pages="page" :total="total" :current-page="current"  v-show="total>9" @pagechanged="onPageChange"></Xpage>
 	</div>
 </template>
 
 <script>
+	import $ from 'jQuery';
+	import xpage from "../pc_page.vue";
 	export default {
 		data() {
 			return {
 				isShow: false,
 				isChange: false,
-				isDelete: false
+				isDelete: false,
+				arr:'',
+				//当前的页码
+				current:1,
+				//数据的总条数
+				total:0,
+				//当前数据的总页数
+				page:1
 			}
+		},
+		components:{
+			'Xpage':xpage
 		},
 		methods: {
 			addAca() {
@@ -129,7 +83,59 @@
 			},
 			deleteAca() {
 				this.isDelete = !this.isDelete
-			}
+			},
+			onPageChange: function (page) {
+		      	this.current = page;
+		      	var _this = this;
+				var arr = [];
+		     	 $.ajax({
+					type:"post",
+					url:"http://localhost:3000/getMajor",
+					data:{
+						start:(page-1)*9
+					},
+					success(data){
+						data = JSON.parse(data);
+						if(data.length!=0){
+							for (var i in data) {
+								arr.push(data[i])
+							}
+						}
+						_this.arr = arr;
+					}
+				});
+		    }
+		},
+		mounted(){
+			var _this = this;
+			var arr = [];
+			$.ajax({
+				type:"post",
+				url:"http://localhost:3000/getMajorTotal",
+				async:true,
+				success(data){
+					data = JSON.parse(data);
+					_this.total = data[0].total;
+					_this.page = Math.ceil(_this.total/9)
+//					console.log(_this.total)
+				}
+			});
+			$.ajax({
+				type:"post",
+				url:"http://localhost:3000/getMajor",
+				data:{
+					start:0
+				},
+				success(data){
+					data = JSON.parse(data);
+					if(data.length!=0){
+						for (var i in data) {
+						arr.push(data[i])
+						}
+						_this.arr = arr;
+					}
+				}
+			});
 		}
 	}
 </script>
@@ -261,28 +267,5 @@
 	
 	.toClick {
 		cursor: pointer;
-	}
-	/*分页样式*/
-	.page{
-		height: 26px;
-		text-align: center;
-		font: 12px/24px "微软雅黑";
-		position: absolute;
-    	left: 50%;bottom: 20px;
-    	margin-left: -100px;
-	}
-	.page i{
-		float: left;
-		padding: 0 5px;
-		font-style: normal;
-		border: 1px solid #666;
-		margin-left: 5px;
-	}
-	.page em{
-		float: left;
-		width: 24px;height: 24px;
-		font-style: normal;
-		border: 1px solid #666;
-		margin-left: 5px;
 	}
 </style>

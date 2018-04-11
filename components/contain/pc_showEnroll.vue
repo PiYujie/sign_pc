@@ -34,117 +34,40 @@
 				<th>报名率</th>
 				<th colspan="2">操作</th>
 			</tr>
-			<tr>
-				<td>1</td>
-				<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-				<td>300</td>
-				<td>400</td>
-				<td>2017-11-17 14：00</td>
-				<td>18%</td>
+			<tr v-for="v in arr">
+				<td>{{v.mes_id}}</td>
+				<td>{{v.act_name}}</td>
+				<td>{{v.len}}</td>
+				<td>{{v.act_num}}</td>
+				<td>{{v.mes_stop}}</td>
+				<td>{{parseInt(v.len/v.act_num*100)}}%</td>
 				<td><a href="#/index/detailEnroll">详情</a></td>
 				<td><a href="#/index/changeEnroll">编辑</a></td>
 			</tr>
-			<tr>
-				<td>2</td>
-				<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-				<td>300</td>
-				<td>400</td>
-				<td>2017-11-17 14：00</td>
-				<td>18%</td>
-				<td>详情</td>
-				<td>编辑</td>
-			</tr>
-			<tr>
-				<td>3</td>
-				<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-				<td>300</td>
-				<td>400</td>
-				<td>2017-11-17 14：00</td>
-				<td>18%</td>
-				<td>详情</td>
-				<td>编辑</td>
-			</tr>
-			<tr>
-				<td>4</td>
-				<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-				<td>300</td>
-				<td>400</td>
-				<td>2017-11-17 14：00</td>
-				<td>18%</td>
-				<td>详情</td>
-				<td>编辑</td>
-			</tr>
-			<tr>
-				<td>5</td>
-				<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-				<td>300</td>
-				<td>400</td>
-				<td>2017-11-17 14：00</td>
-				<td>18%</td>
-				<td>详情</td>
-				<td>编辑</td>
-			</tr>
-			<tr>
-				<td>6</td>
-				<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-				<td>300</td>
-				<td>400</td>
-				<td>2017-11-17 14：00</td>
-				<td>18%</td>
-				<td>详情</td>
-				<td>编辑</td>
-			</tr>
-			<tr>
-				<td>7</td>
-				<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-				<td>300</td>
-				<td>400</td>
-				<td>2017-11-17 14：00</td>
-				<td>18%</td>
-				<td>详情</td>
-				<td>编辑</td>
-			</tr>
-			<tr>
-				<td>8</td>
-				<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-				<td>300</td>
-				<td>400</td>
-				<td>2017-11-17 14：00</td>
-				<td>18%</td>
-				<td>详情</td>
-				<td>编辑</td>
-			</tr>
-			<tr>
-				<td>9</td>
-				<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-				<td>300</td>
-				<td>400</td>
-				<td>2017-11-17 14：00</td>
-				<td>18%</td>
-				<td>详情</td>
-				<td>编辑</td>
-			</tr>
-			<tr>
-				<td>10</td>
-				<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-				<td>300</td>
-				<td>400</td>
-				<td>2017-11-17 14：00</td>
-				<td>18%</td>
-				<td>详情</td>
-				<td>编辑</td>
-			</tr>
 		</table>
+		<xpage :total-pages="page" :total="total" :current-page="current"  @pagechanged="onPageChange" v-show="total>9"/>
 	</div>
 </template>
 
 <script>
+	import $ from 'jQuery';
+	import xpage from "../pc_page.vue";
 	export default {
 		data() {
 			return {
 				isShow: false,
-				isDelete:false
+				isDelete:false,
+				arr:'',
+				//当前的页码
+				current:1,
+				//数据的总条数
+				total:0,
+				//当前数据的总页数
+				page:1
 			}
+		},
+		components:{
+			xpage
 		},
 		methods: {
 			clear() {
@@ -161,7 +84,62 @@
 			},
 			toDelete(){
 				this.isDelete = !this.isDelete;
-			}
+			},
+			onPageChange(page) {
+		      	console.log(page)
+		      	this.current = page;
+		      	var _this = this;
+				var arr = [];
+		     	 $.ajax({
+					type:"post",
+					url:"http://localhost:3000/getAca",
+					data:{
+						start:(page-1)*9
+					},
+					success(data){
+						data = JSON.parse(data);
+						if(data.length!=0){
+							for (var i in data) {
+								arr.push(data[i])
+							}
+						}
+						_this.arr = arr;
+					}
+				});
+		    }
+		},
+		mounted(){
+			var _this = this;
+			var arr = [];
+			$.ajax({
+				type:"post",
+				url:"http://localhost:3000/getMesTotal",
+				async:true,
+				success(data){
+					data = JSON.parse(data);
+					_this.total = data[0].total;
+					_this.page = Math.ceil(_this.total/9)
+//					console.log(_this.total)
+				}
+			});
+			$.ajax({
+				type:"post",
+				url:"http://localhost:3000/getMes",
+				async:true,
+				data:{
+					start:0
+				},
+				success(data){
+					data = JSON.parse(data);
+					console.log(data)
+					if(data.length!=0){
+						for(var i in data){
+							arr.push(data[i])
+						}
+						_this.arr = arr;
+					}
+				}
+			});
 		}
 	}
 </script>
@@ -175,6 +153,7 @@
 		padding: 10px;
 		color: #fff;
 		margin-right: 10px;
+		position: relative;
 		background-color: rgba(255, 100, 0, 0.3);
 	}
 	h3{

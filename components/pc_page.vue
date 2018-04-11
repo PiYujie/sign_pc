@@ -1,76 +1,153 @@
 <template>
-	<div class="page">
-		<i>上一页</i><em>1</em><em>2</em><em>3</em><em>···</em><em>11</em><em>12</em><i>下一页</i>
-	</div>
+	<!--<div class="page">-->
+		<!--<i v-if="current>1">上一页</i>
+		<em v-for="v in pages">{{v}}</em>-->
+		<!--<em>2</em><em>3</em><em>···</em><em>11</em><em>12</em>-->
+		<!--<i v-if="current != total" @click="toNext()">下一页</i>-->
+		<ul class="page">
+	        <li>
+	            <button type="button" @click="onClickFirstPage" :disabled="isInFirstPage">首页</button>
+	        </li>
+	        <li>
+	            <button type="button" @click="onClickPreviousPage" :disabled="isInFirstPage">上一页</button>
+	        </li>
+	        <li v-for="page in pages">
+	            <!--<button type="button" @click="onClickPage(page.name)" :disabled="page.isDisabled"> {{ page.name }}</button>-->
+	            <button type="button" @click="onClickPage(page.name)" :disabled="page.isDisabled" :class="{active: isPageActive(page.name)}"> {{ page.name }}</button>
+<!--</li>-->
+	        </li>
+	        <li>
+	            <button type="button" @click="onClickNextPage" :disabled="isInLastPage">下一页</button>
+	        </li>
+	        <li>
+	            <button type="button" @click="onClickLastPage" :disabled="isInLastPage">尾页</button>
+	        </li>
+	    </ul>
+	<!--</div>-->
 </template>
 
 <script>
+	export default {
+		props: {
+			//最大可点击按钮
+	        maxVisibleButtons: {
+	            type: Number,
+	            required: false,
+	            default: 3
+	        },
+	        //总页数
+	        totalPages: {
+	            type: Number,
+	            required: true
+	        },
+	        //总条数
+	        total: {
+	            type: Number,
+	            required: true
+	        },
+	        //当前点击页码
+	        currentPage: {
+	            type: Number,
+	            required: true
+	        }
+	   },
+		methods: {
+			//点击跳转首页
+			onClickFirstPage: function () {
+	            this.$emit('pagechanged', 1)
+	        },
+	        //点击跳转上一页
+	        onClickPreviousPage: function () {
+	            this.$emit('pagechanged', this.currentPage - 1)
+	        },
+	        //点击页码
+	        onClickPage: function (page) {
+	            this.$emit('pagechanged', page)
+	        },
+	        //点击下一页
+	        onClickNextPage: function () {
+	            this.$emit('pagechanged', this.currentPage + 1)
+	        },
+	        //点击尾页按钮
+	        onClickLastPage: function () {
+	            this.$emit('pagechanged', this.totalPages)
+	        },
+	        //是否处于被点击状态
+	        isPageActive: function (page) {
+	            return this.currentPage === page;
+	        }
+		},
+		computed: {
+			//检测是否处于首页
+			isInFirstPage: function () {
+	            return this.currentPage === 1
+	        },
+	        //检测是否处于尾页
+	        isInLastPage: function () {
+	            return this.currentPage === this.totalPages
+	        },
+	        //
+	        startPage: function () {
+	        	//如果点击的为当前页返回1
+	            if (this.currentPage === 1) {
+	                return 1
+	            }
+	            //如果点击的等于总的页数返回 总页数-2
+	            else if (this.currentPage === this.totalPages) {
+	                return this.totalPages - this.maxVisibleButtons + 2
+	            }
+	            else {
+	            	return this.currentPage - 1
+	            }
+        	},
+	        endPage: function () {
+	            return Math.min(this.startPage + this.maxVisibleButtons - 1, this.totalPages)
+	        },
+	        pages: function () {
+	            const range = []
+	            for (let i = this.startPage; i <= this.endPage; i+=1) {
+	                range.push({
+	                    name: i,
+	                    isDisabled: i === this.currentPage
+	                })
+	            }
+	            return range
+	       	}
+		}
+	}
 </script>
 
 <style scoped="scoped">
 	/*分页样式*/
-	.page{
+	
+	.page {
 		height: 26px;
 		margin: 10px auto 0;
 		text-align: center;
 		font: 12px/24px "微软雅黑";
-		position: relative;
-    	left: 50%;
-    	margin-left: -190px;
+		position: absolute;
+		left: 50%;bottom: 20px;
+		margin-left: -190px;
 	}
-	.page i{
+	
+	.page li {
+		height: 26px;
 		float: left;
 		padding: 0 5px;
 		font-style: normal;
 		border: 1px solid #666;
 		margin-left: 5px;
+		/*cursor: pointer;*/
 	}
-	.page em{
-		float: left;
-		width: 24px;height: 24px;
-		font-style: normal;
-		border: 1px solid #666;
-		margin-left: 5px;
-	}
-	/*添加活动表样式*/
-	.addEnroll p{
-		height: 60px;
-		width: 600px;
-		margin: 0 auto;
-		font:14px/30px  "微软雅黑";
-	}
-	.addEnroll p span{
-		float: left;
-		width: 150px;
-		font:16px/60px "微软雅黑";
-	}
-	.addEnroll p select{
-		float: left;
-		height: 30px;
-		margin-top: 15px;
-	}
-	.addEnroll p input[type="text"]{
-		float: left;
-		background-color: rgba(0,0,0,0);
-		height: 30px;width: 400px;
-		margin-top: 10px;
-		border-bottom: 1px solid #fff;
-		font:14px/30px  "微软雅黑";
-	}
-	.addEnroll p i{
-		float: right;
-	}
-		/*单选按钮*/
-	.addEnroll p input[type="radio"]{
-		margin-top: 23px;
-	}
-	.addEnroll button{
+	
+	.page button {
 		display: block;
-		width: 120px;height: 40px;
-		margin: 20px auto;
-		border-radius: 4px;
-		background: rgba(255,100,0,0.5);
-    	color: #fff;
-    	font:16px/40px  "微软雅黑";
+		width: 100%;height: 100%;
+		font-style: normal;
+		background: rgba(0,0,0,0);
+		cursor: pointer;
+	}
+	.active{
+		background-color: rgba(255,100,0,0.6);
 	}
 </style>

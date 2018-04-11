@@ -36,135 +36,45 @@
 					<th>人数</th>
 					<th colspan="3">操作</th>
 				</tr>
-				<tr>
-					<td>1</td>
-					<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-					<td>科技竞赛</td>
-					<td>A211</td>
-					<td>2017-11-17 14：00</td>
-					<td>200</td>
+				<tr v-for="v in arr">
+					<td>{{v.act_id}}</td>
+					<td>{{v.act_name}}</td>
+					<td>{{v.gen_name}}</td>
+					<td>{{v.act_address}}</td>
+					<td>{{v.begin_time}}</td>
+					<td>{{v.act_num}}</td>
 					<td><a href="#/index/detailAct">详情</a></td>
 					<td><a href="#/index/changeAct">编辑</a></td>
 					<td @click="toDelete" class="toDelete">删除</td>
 				</tr>
-				<tr>
-					<td>2</td>
-					<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-					<td>科技竞赛</td>
-					<td>A211</td>
-					<td>2017-11-17 14：00</td>
-					<td>200</td>
-					<td>详情</td>
-					<td>编辑</td>
-					<td>删除</td>
-				</tr>
-				<tr>
-					<td>3</td>
-					<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-					<td>科技竞赛</td>
-					<td>A211</td>
-					<td>2017-11-17 14：00</td>
-					<td>200</td>
-					<td>详情</td>
-					<td>编辑</td>
-					<td>删除</td>
-				</tr>
-				<tr>
-					<td>4</td>
-					<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-					<td>科技竞赛</td>
-					<td>A211</td>
-					<td>2017-11-17 14：00</td>
-					<td>200</td>
-					<td>详情</td>
-					<td>编辑</td>
-					<td>删除</td>
-				</tr>
-				<tr>
-					<td>5</td>
-					<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-					<td>科技竞赛</td>
-					<td>A211</td>
-					<td>2017-11-17 14：00</td>
-					<td>200</td>
-					<td>详情</td>
-					<td>编辑</td>
-					<td>删除</td>
-				</tr>
-				<tr>
-					<td>6</td>
-					<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-					<td>科技竞赛</td>
-					<td>A211</td>
-					<td>2017-11-17 14：00</td>
-					<td>200</td>
-					<td>详情</td>
-					<td>编辑</td>
-					<td>删除</td>
-				</tr>
-				<tr>
-					<td>7</td>
-					<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-					<td>科技竞赛</td>
-					<td>A211</td>
-					<td>2017-11-17 14：00</td>
-					<td>200</td>
-					<td>详情</td>
-					<td>编辑</td>
-					<td>删除</td>
-				</tr>
-				<tr>
-					<td>8</td>
-					<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-					<td>科技竞赛</td>
-					<td>A211</td>
-					<td>2017-11-17 14：00</td>
-					<td>200</td>
-					<td>详情</td>
-					<td>编辑</td>
-					<td>删除</td>
-				</tr>
-				<tr>
-					<td>9</td>
-					<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-					<td>科技竞赛</td>
-					<td>A211</td>
-					<td>2017-11-17 14：00</td>
-					<td>200</td>
-					<td>详情</td>
-					<td>编辑</td>
-					<td>删除</td>
-				</tr>
-				<tr>
-					<td>10</td>
-					<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-					<td>科技竞赛</td>
-					<td>A211</td>
-					<td>2017-11-17 14：00</td>
-					<td>200</td>
-					<td>详情</td>
-					<td>编辑</td>
-					<td>删除</td>
-				</tr>
 			</table>
-			<div class="page">
-				<i>上一页</i><em>1</em><em>2</em><em>3</em><em>···</em><em>11</em><em>12</em><i>下一页</i>
-			</div>
+			
+			
 		</div>
 		<div class="message" v-show="isDelete">
 			<h3>提示</h3>
 			<b>您确定删除这条记录吗？</b>
 			<p><span>确认</span><span  @click="toDelete">取消</span></p>		
 		</div>
+		<xpage :total-pages="page" :total="total" :current-page="current"  @pagechanged="onPageChange" v-show="total>9"/>
 	</div>
 </template>
 
 <script>
+	import xpage from "../pc_page.vue";
+	import $ from 'jQuery';
 	export default {
 		data() {
 			return {
 				isShow: false,
-				isDelete:false
+				isDelete:false,
+				arr:'',
+				//当前的页码
+				current:1,
+				//数据的总条数
+				total:0,
+				//当前数据的总页数
+				page:1
 			}
 		},
 		methods: {
@@ -182,7 +92,65 @@
 			},
 			toDelete(){
 				this.isDelete = !this.isDelete;
-			}
+			},
+			onPageChange(page) {
+		      	console.log(page)
+		      	this.current = page;
+		      	var _this = this;
+				var arr = [];
+		     	 $.ajax({
+					type:"post",
+					url:"http://localhost:3000/getAct",
+					data:{
+						start:(page-1)*9
+					},
+					success(data){
+						data = JSON.parse(data);
+						if(data.length!=0){
+							for (var i in data) {
+								arr.push(data[i])
+							}
+						}
+						_this.arr = arr;
+					}
+				});
+		    }
+		},
+		components:{
+			xpage
+		},
+		mounted(){
+			var _this = this;
+			var arr = [];
+			$.ajax({
+				type:"post",
+				url:"http://localhost:3000/getActTotal",
+				async:true,
+				success(data){
+					data = JSON.parse(data);
+					_this.total = data[0].total;
+					_this.page = Math.ceil(_this.total/9)
+					console.log(_this.total)
+				}
+			});
+			$.ajax({
+				type:"post",
+				url:"http://localhost:3000/getAct",
+				async:true,
+				data:{
+					start:0
+				},
+				success(data){
+					data = JSON.parse(data);
+//					console.log(data)
+					if(data.length!=0){
+						for(var i in data){
+							arr.push(data[i])
+						}
+						_this.arr = arr;
+					}
+				}
+			});
 		}
 	}
 </script>
@@ -196,6 +164,7 @@
 		padding: 10px;
 		color: #fff;
 		margin-right: 10px;
+		position: relative;
 		background-color: rgba(255, 100, 0, 0.3);
 	}
 	h3{
@@ -310,34 +279,6 @@
 	
 	.showAct table tr {
 		height: 28px;
-	}
-	/*分页样式设置*/
-	
-	.page {
-		height: 26px;
-		margin: 10px auto 0;
-		text-align: center;
-		font: 12px/24px "微软雅黑";
-		position: relative;
-		left: 50%;
-		margin-left: -190px;
-	}
-	
-	.page i {
-		float: left;
-		padding: 0 5px;
-		font-style: normal;
-		border: 1px solid #666;
-		margin-left: 5px;
-	}
-	
-	.page em {
-		float: left;
-		width: 24px;
-		height: 24px;
-		font-style: normal;
-		border: 1px solid #666;
-		margin-left: 5px;
 	}
 	/*删除弹出*/
 	.message{

@@ -4,13 +4,17 @@
 		<div class="list">
 			<table border="1" cellspacing="0" cellpadding="1">
 				<tr><th>学院编号</th><th>学院名称</th><th colspan="2">操作</th></tr>
-				<tr><td>1</td><td>电气与信息工程学院</td><td @click="changeAca">重命名</td><td @click="deleteAca">删除</td></tr>
-				<tr><td>1</td><td>电气与信息工程学院</td><td>重命名</td><td>删除</td></tr>
-				<tr><td>1</td><td>电气与信息工程学院</td><td>重命名</td><td>删除</td></tr>
-				<tr><td>1</td><td>电气与信息工程学院</td><td>重命名</td><td>删除</td></tr>
-				<tr><td>1</td><td>电气与信息工程学院</td><td>重命名</td><td>删除</td></tr>
+				<tr v-for="v in arr">
+					<td>{{v.aca_id}}</td>
+					<td>{{v.aca_name}}</td>
+					<td @click="changeAca">重命名</td>
+					<td @click="deleteAca">删除</td>
+				</tr>
 			</table>
 		</div>
+		
+		<xpage :total-pages="page" :total="total" :current-page="current"  @pagechanged="onPageChange" v-show="total>9"/>
+		
 		<div class="add" v-show="isShow">
 			<div class="cont">
 				<h5>请输入新增的学院名称</h5>
@@ -36,13 +40,25 @@
 </template>
 
 <script>
+	import xpage from "../pc_page.vue";
+	import $ from 'jQuery';
 	export default{
 		data(){
 			return {
 				isShow:false,
 				isChange:false,
-				isDelete:false
+				isDelete:false,
+				arr:"",
+				//当前的页码
+				current:1,
+				//数据的总条数
+				total:0,
+				//当前数据的总页数
+				page:1
 			}
+		},
+		components:{
+			xpage
 		},
 		methods:{
 			addAca(){
@@ -53,7 +69,60 @@
 			},
 			deleteAca(){
 				this.isDelete = !this.isDelete
-			}
+			},
+			onPageChange(page) {
+		      	console.log(page)
+		      	this.current = page;
+		      	var _this = this;
+				var arr = [];
+		     	 $.ajax({
+					type:"post",
+					url:"http://localhost:3000/getAca",
+					data:{
+						start:(page-1)*9
+					},
+					success(data){
+						data = JSON.parse(data);
+						if(data.length!=0){
+							for (var i in data) {
+								arr.push(data[i])
+							}
+						}
+						_this.arr = arr;
+					}
+				});
+		    }
+		},
+		mounted(){
+			var _this = this;
+			var arr = [];
+			$.ajax({
+				type:"post",
+				url:"http://localhost:3000/getAcaTotal",
+				async:true,
+				success(data){
+					data = JSON.parse(data);
+					_this.total = data[0].total;
+					_this.page = Math.ceil(_this.total/9)
+					console.log(_this.total)
+				}
+			});
+			$.ajax({
+				type:"post",
+				url:"http://localhost:3000/getAca",
+				data:{
+					start:0
+				},
+				success(data){
+					data = JSON.parse(data);
+					if(data.length!=0){
+						for (var i in data) {
+							arr.push(data[i])
+						}
+					}
+					_this.arr = arr;
+				}
+			});
 		}
 	}
 </script>
