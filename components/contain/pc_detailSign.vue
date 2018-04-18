@@ -2,8 +2,8 @@
 	<div class="leftCont">
 		<h3>{{title}}签到详情</h3>
 		<div class="showWay">
-			<select name="showWay">
-				<option value="0">全部</option>
+			<select name="showWay" v-model="showWay">
+				<option value="0" selected="selected">全部</option>
 				<option value="1">已签到</option>
 				<option value="2">未签到</option>
 			</select>
@@ -19,107 +19,31 @@
 				<th>报名学生姓名</th>
 				<th>签到情况</th>
 			</tr>
-			<tr>
-				<td>1</td>
-				<td>2014441705</td>
-				<td>张三</td>
-				<td>电气与信息工程学院</td>
-				<td>计算机科学与技术</td>
-				<td>2014级</td>
-				<td>3班</td>
-				<td>已签到</td>
+			<tr v-for="v in arr">
+				<td>{{v.num}}</td>
+				<td>{{v.id}}</td>
+				<td>{{v.aca}}</td>
+				<td>{{v.major}}</td>
+				<td>{{v.gra}}</td>
+				<td>{{v.cla}}</td>
+				<td>{{v.name}}</td>
+				<td>{{v.state}}</td>
 			</tr>
-			<tr>
-				<td>1</td>
-				<td>2014441705</td>
-				<td>张三</td>
-				<td>电气与信息工程学院</td>
-				<td>计算机科学与技术</td>
-				<td>2014级</td>
-				<td>3班</td>
-				<td>已签到</td>
-			</tr>
-			<tr>
-				<td>1</td>
-				<td>2014441705</td>
-				<td>张三</td>
-				<td>电气与信息工程学院</td>
-				<td>计算机科学与技术</td>
-				<td>2014级</td>
-				<td>3班</td>
-				<td>已签到</td>
-			</tr>
-			<tr>
-				<td>1</td>
-				<td>2014441705</td>
-				<td>张三</td>
-				<td>电气与信息工程学院</td>
-				<td>计算机科学与技术</td>
-				<td>2014级</td>
-				<td>3班</td>
-				<td>已签到</td>
-			</tr>
-			<tr>
-				<td>1</td>
-				<td>2014441705</td>
-				<td>张三</td>
-				<td>电气与信息工程学院</td>
-				<td>计算机科学与技术</td>
-				<td>2014级</td>
-				<td>3班</td>
-				<td>已签到</td>
-			</tr>
-			<tr>
-				<td>1</td>
-				<td>2014441705</td>
-				<td>张三</td>
-				<td>电气与信息工程学院</td>
-				<td>计算机科学与技术</td>
-				<td>2014级</td>
-				<td>3班</td>
-				<td>已签到</td>
-			</tr>
-			<tr>
-				<td>1</td>
-				<td>2014441705</td>
-				<td>张三</td>
-				<td>电气与信息工程学院</td>
-				<td>计算机科学与技术</td>
-				<td>2014级</td>
-				<td>3班</td>
-				<td>已签到</td>
-			</tr>
-			<tr>
-				<td>1</td>
-				<td>2014441705</td>
-				<td>张三</td>
-				<td>电气与信息工程学院</td>
-				<td>计算机科学与技术</td>
-				<td>2014级</td>
-				<td>3班</td>
-				<td>已签到</td>
-			</tr>
-			<tr>
-				<td>1</td>
-				<td>2014441705</td>
-				<td>张三</td>
-				<td>电气与信息工程学院</td>
-				<td>计算机科学与技术</td>
-				<td>2014级</td>
-				<td>3班</td>
-				<td>已签到</td>
-			</tr>
+			
 		</table>
 	</div>
 </template>
 
 <script>
+	import $ from 'jQuery';
 	export default {
 		data() {
 			return {
 				title:"2017年“数创杯”全国大学生数学建模挑战赛",
 				isShow: false,
-				isDelete:false
+				isDelete:false,
+				arr:'',
+				showWay:0
 			}
 		},
 		methods: {
@@ -137,8 +61,147 @@
 			},
 			toDelete(){
 				this.isDelete = !this.isDelete;
+			},
+			getAll(){
+				var _this = this;
+				var arr = []; 
+				$.ajax({
+		    		type:"post",
+		    		url:"http://localhost:3000/getSignById",
+		    		async:true,
+		    		data:{
+		    			id:this.$route.params.id,
+		    			start:0
+		    		},
+		    		success(data){
+		    			data = JSON.parse(data);
+		    			for(var i in data){
+		    				var num = parseInt(i)+1;
+		    				var id = data[i].stu_id;
+		    				var name = data[i].stu_name;
+		    				var aca = data[i].aca_name;
+		    				var major = data[i].major_name;
+		    				var cla = data[i].classes;
+		    				var gra = data[i].grade;
+		    				if(data[i].sign_state==0){
+		    					var state = '未签到'
+		    				}else{
+		    					var state = '已签到'
+		    				}
+		    				var datas = {};
+		    				datas.num = num;
+		    				datas.id = id;
+		    				datas.name = name;
+		    				datas.aca = aca;
+		    				datas.major = major;
+		    				datas.cla = cla;
+		    				datas.gra = gra;
+		    				datas.state = state;
+		    				arr.push(datas)
+		    			}
+		    			_this.arr = arr;
+		    		}
+		    	});
+			},
+			getIn(){
+				var _this = this;
+				var arr = []; 
+				$.ajax({
+		    		type:"post",
+		    		url:"http://localhost:3000/getSignById1",
+		    		async:true,
+		    		data:{
+		    			id:this.$route.params.id,
+		    			start:0
+		    		},
+		    		success(data){
+		    			data = JSON.parse(data);
+		    			for(var i in data){
+		    				var num = parseInt(i)+1;
+		    				var id = data[i].stu_id;
+		    				var name = data[i].stu_name;
+		    				var aca = data[i].aca_name;
+		    				var major = data[i].major_name;
+		    				var cla = data[i].classes;
+		    				var gra = data[i].grade;
+		    				if(data[i].sign_state==0){
+		    					var state = '未签到'
+		    				}else{
+		    					var state = '已签到'
+		    				}
+		    				var datas = {};
+		    				datas.num = num;
+		    				datas.id = id;
+		    				datas.name = name;
+		    				datas.aca = aca;
+		    				datas.major = major;
+		    				datas.cla = cla;
+		    				datas.gra = gra;
+		    				datas.state = state;
+		    				arr.push(datas)
+		    			}
+		    			_this.arr = arr;
+		    		}
+		    	});
+			},
+			getOut(){
+				var _this = this;
+				var arr = []; 
+				$.ajax({
+		    		type:"post",
+		    		url:"http://localhost:3000/getSignById2",
+		    		async:true,
+		    		data:{
+		    			id:this.$route.params.id,
+		    			start:0
+		    		},
+		    		success(data){
+		    			data = JSON.parse(data);
+		    			for(var i in data){
+		    				var num = parseInt(i)+1;
+		    				var id = data[i].stu_id;
+		    				var name = data[i].stu_name;
+		    				var aca = data[i].aca_name;
+		    				var major = data[i].major_name;
+		    				var cla = data[i].classes;
+		    				var gra = data[i].grade;
+		    				if(data[i].sign_state==0){
+		    					var state = '未签到'
+		    				}else{
+		    					var state = '已签到'
+		    				}
+		    				var datas = {};
+		    				datas.num = num;
+		    				datas.id = id;
+		    				datas.name = name;
+		    				datas.aca = aca;
+		    				datas.major = major;
+		    				datas.cla = cla;
+		    				datas.gra = gra;
+		    				datas.state = state;
+		    				arr.push(datas)
+		    			}
+		    			_this.arr = arr;
+		    		}
+		    	});
 			}
-		}
+		},
+		mounted(){
+		    this.getAll();
+	    },
+	    watch:{
+	   		showWay:function(){
+	   			var _this = this;
+				var arr = []; 
+	   			if(this.showWay == 1){
+	   				this.getIn();
+	   			}else if(this.showWay == 2){
+	   				this.getOut();
+	   			}else{
+	   				this.getAll();
+	   			}
+	   		}
+	    }
 	}
 </script>
 

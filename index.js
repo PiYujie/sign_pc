@@ -3,10 +3,11 @@ import Vue from "vue";
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 // 状态管理
-import Vuex from 'vuex'
+import Vuex from 'vuex';
 Vue.use(Vuex)
 // 全局样式
 import "./template/base.css";
+
 //选项卡组件
 //活动
 import addAct from "./components/contain/pc_addAct.vue";
@@ -14,6 +15,7 @@ import showAct from "./components/contain/pc_showAct.vue";
 import changeAct from "./components/contain/pc_changeAct.vue";
 import detailAct from "./components/contain/pc_detailAct.vue";
 import educeAct from "./components/contain/pc_educeAct.vue";
+import genre from "./components/contain/pc_genre.vue";
 //报名
 import addEnroll from "./components/contain/pc_addEnroll.vue";
 import showEnroll from "./components/contain/pc_showEnroll.vue";
@@ -71,6 +73,10 @@ var router = new VueRouter({
             		component:educeAct
             	},
             	{
+            		path:"genre",
+            		component:genre
+            	},
+            	{
             		path:"addEnroll",
             		component:addEnroll
             	},
@@ -99,7 +105,7 @@ var router = new VueRouter({
             		component:showSign
             	},
             	{
-            		path:"detailSign",
+            		path:"detailSign/:id",
             		component:detailSign
             	},
             	{

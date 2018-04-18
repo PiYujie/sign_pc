@@ -7,35 +7,50 @@
 				<tr v-for="v in arr">
 					<td>{{v.aca_id}}</td>
 					<td>{{v.aca_name}}</td>
-					<td @click="changeAca">重命名</td>
-					<td @click="deleteAca">删除</td>
+					<td @click="changeAca($event)" class="pointer">重命名</td>
+					<td @click="deleteAca($event)" class="pointer">删除</td>
 				</tr>
 			</table>
 		</div>
 		
-		<xpage :total-pages="page" :total="total" :current-page="current"  @pagechanged="onPageChange" v-show="total>9"/>
-		
-		<div class="add" v-show="isShow">
+
+		<!-- 添加框 -->
+		<div class="add" v-show="isAdd">
 			<div class="cont">
 				<h5>请输入新增的学院名称</h5>
-				<input type="text" name="acamedy" id="acamedy" />
-				<p><span>确定</span><span @click="addAca">取消</span></p>
+				<input type="text" v-model="addVal"/>
+				<p><span @click="yesAdd">确定</span><span @click="noAdd">取消</span></p>
 			</div>
 		</div>
+		<!-- 修改框 -->
 		<div class="add" v-show="isChange">
 			<div class="cont">
 				<h5>请修改学院名称</h5>
-				<input type="text" name="acamedy" id="acamedy" />
-				<p><span>确定</span><span @click="changeAca">取消</span></p>
+				<input type="text" v-model="chaVal" />
+				<p><span @click="yesCha">确定</span><span @click="noCha">取消</span></p>
 			</div>
 		</div>
+		
+		<!-- 删除框 -->
 		<div class="add" v-show="isDelete">
 			<div class="cont">
 				<h5>删除学院</h5>
 				<h6>删除后所属学院的专业将会删除</h6>
-				<p><span>确定</span><span @click="deleteAca">取消</span></p>
+				<p>
+					<span @click="yesDel">确定</span>
+					<span @click="noDel">取消</span>
+				</p>
 			</div>
 		</div>
+		
+		<!-- 提示信息 -->
+		<div class="message" v-show="isError">
+			<p v-text="message"></p>
+		</div>
+		
+		<!-- 分页 -->
+		<xpage :total-pages="page" :total="total" :current-page="current"  @pagechanged="onPageChange" v-show="total>9"/>
+		
 	</div>
 </template>
 
@@ -45,33 +60,160 @@
 	export default{
 		data(){
 			return {
-				isShow:false,
+				//添加
+				isAdd:false,
+				addVal:"",
+				//修改
 				isChange:false,
+				chaVal:"",
+				//删除
 				isDelete:false,
+				del:false,
+				//提示信息
+				message:'',
+				isError:false,
 				arr:"",
+				//分页
 				//当前的页码
 				current:1,
 				//数据的总条数
 				total:0,
 				//当前数据的总页数
-				page:1
+				page:1,
+				id:'',
+				state:1
 			}
 		},
 		components:{
 			xpage
 		},
 		methods:{
+			//添加学院
 			addAca(){
-				this.isShow = !this.isShow
+				this.isAdd = true;
 			},
-			changeAca(){
-				this.isChange = !this.isChange
+			noAdd(){
+				this.isAdd = false;
 			},
-			deleteAca(){
-				this.isDelete = !this.isDelete
+			yesAdd(){
+				if(this.addVal.length==0){
+					this.isError = true;
+					this.message = "学院名称不可为空！";
+				}else if(!/[\u4e00-\u9fa5]/g.test(this.addVal)){
+					this.isError = true;
+					this.message = "学院名称只能为中文！";
+				}else{
+					var val = this.addVal;
+					var isAdd = false;
+					for (var i in this.arr) {
+						if(this.arr[i].aca_name == val){
+							this.isError = true;
+							this.addVal = '';
+							this.message = "该学院已存在";
+							isAdd = false;
+							break;
+						}else{
+							isAdd = true;
+						}
+					}
+					if(isAdd){
+						var _this = this;
+						this.isError = true;
+						this.message = "添加成功";
+						$.ajax({
+							type:"post",
+							url:"http://localhost:3000/addAca",
+							data:{
+								name:val
+							},
+							success(data){
+								data = JSON.parse(data);
+								_this.addVal = '';
+								_this.isError = false;
+								_this.message = '';
+								_this.isAdd = false;
+								_this.isError = true;
+								setTimeout(function(){
+									location.reload();
+								},1000)
+								
+//								$('.add').css('display','none');
+//								$('.message').css('display','none')
+							}
+						});
+//						this.getAllAca();
+					}
+				}
 			},
+			//修改学院
+			changeAca(e){
+				this.isChange = true;
+				this.id = $(e.target).prev().prev().html();
+				this.chaVal = $(e.target).prev().html();
+			},
+			yesCha(){
+				this.state = 1;
+				this.updateAca();
+				this.isError = true;
+				this.message = "修改成功";
+					location.reload();
+			},
+			noCha(){
+				this.isChange = false;
+			},
+			//删除学院
+			deleteAca(e){
+				this.id = $(e.target).prev().prev().prev().html();
+				this.chaVal = $(e.target).prev().prev().html();
+				this.isDelete = true;
+			},
+			isDel(){
+				var _this = this;
+				$.ajax({
+					type:"post",
+					url:"http://localhost:3000/isDeleteAca",
+					async:false,
+					data:{
+						id:_this.id
+					},
+					success(data){
+						data = JSON.parse(data);
+						if(data[0].total==0){
+							_this.del = true;
+							console.log("2if:"+_this.del)
+						}else{
+							_this.del = false;
+							console.log("else"+_this.del)
+						}
+					}
+				});
+			},
+			yesDel(){
+				console.log("1"+this.del)
+				this.isDel();
+				console.log("4"+this.del)
+				if(this.del){
+					this.state = 0;
+					this.chaVal = 
+					this.updateAca();
+					location.reload();
+					this.isDelete = false;
+				}else{
+					this.isError = true;
+					this.message = "该学院仍有专业开设，不可删除！！";
+				}
+				var _this = this;
+				setTimeout(function(){
+			       	_this.isError = false;
+					_this.isDelete = false;
+			    }, 1000);
+				
+			},
+			noDel(){
+				this.isDelete = false;
+			},
+			// 分页
 			onPageChange(page) {
-		      	console.log(page)
 		      	this.current = page;
 		      	var _this = this;
 				var arr = [];
@@ -91,38 +233,60 @@
 						_this.arr = arr;
 					}
 				});
-		    }
+		   	},
+		   	//修改信息
+		   	updateAca(){
+		   		console.log(this.id,this.chaVal)
+		   		var _this = this;
+				$.ajax({
+					type:"post",
+					url:"http://localhost:3000/changeAca",
+					data:{
+						id:_this.id,
+						name:_this.chaVal,
+						state:_this.state
+					},
+					success(data){
+						data = JSON.parse(data);
+//						location.reload();
+					}
+				});
+		   	},
+		   	//获取所有学院信息
+		  	getAllAca(){
+		  		var _this = this;
+				var arr = [];
+				$.ajax({
+					type:"post",
+					url:"http://localhost:3000/getAcaTotal",
+					async:true,
+					success(data){
+						data = JSON.parse(data);
+						_this.total = data[0].total;
+						_this.page = Math.ceil(_this.total/9)
+					}
+				});
+		   		$.ajax({
+					type:"post",
+					url:"http://localhost:3000/getAca",
+					data:{
+						start:0
+					},
+					success(data){
+						data = JSON.parse(data);
+						if(data.length!=0){
+							for (var i in data) {
+								arr.push(data[i])
+							}
+						}
+						this.current = 1;
+						_this.arr = arr;
+					}
+				});
+		  	}
 		},
 		mounted(){
-			var _this = this;
-			var arr = [];
-			$.ajax({
-				type:"post",
-				url:"http://localhost:3000/getAcaTotal",
-				async:true,
-				success(data){
-					data = JSON.parse(data);
-					_this.total = data[0].total;
-					_this.page = Math.ceil(_this.total/9)
-					console.log(_this.total)
-				}
-			});
-			$.ajax({
-				type:"post",
-				url:"http://localhost:3000/getAca",
-				data:{
-					start:0
-				},
-				success(data){
-					data = JSON.parse(data);
-					if(data.length!=0){
-						for (var i in data) {
-							arr.push(data[i])
-						}
-					}
-					_this.arr = arr;
-				}
-			});
+			this.getAllAca();
 		}
 	}
 </script>
@@ -207,6 +371,7 @@
 		height: 28px;width: 200px;
 		border: 1px solid #DCDCDC;
 		border-radius: 4px;
+		text-indent: 10px;
 	}
 	.cont h6{
 		margin: 15px auto;
@@ -214,5 +379,23 @@
 		text-align: center;
 		color: red;
 		font:14px/30px "微软雅黑";
+	}
+	.pointer{
+		cursor: pointer;
+	}
+	.message{
+		position: absolute;
+		z-index: 5;
+		width: 280px;
+		top: 41%;left: 50%;
+		margin-left: -140px;
+		/*background-color: white;*/
+	}
+	.message p{
+		width: 100%;height: 100%;
+		font:bold 16px/30px "微软雅黑";
+		color: red;
+		border:none;
+		text-align: center;
 	}
 </style>

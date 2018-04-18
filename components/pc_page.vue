@@ -1,29 +1,23 @@
 <template>
-	<!--<div class="page">-->
-		<!--<i v-if="current>1">上一页</i>
-		<em v-for="v in pages">{{v}}</em>-->
-		<!--<em>2</em><em>3</em><em>···</em><em>11</em><em>12</em>-->
-		<!--<i v-if="current != total" @click="toNext()">下一页</i>-->
-		<ul class="page">
-	        <li>
-	            <button type="button" @click="onClickFirstPage" :disabled="isInFirstPage">首页</button>
-	        </li>
-	        <li>
-	            <button type="button" @click="onClickPreviousPage" :disabled="isInFirstPage">上一页</button>
-	        </li>
-	        <li v-for="page in pages">
-	            <!--<button type="button" @click="onClickPage(page.name)" :disabled="page.isDisabled"> {{ page.name }}</button>-->
-	            <button type="button" @click="onClickPage(page.name)" :disabled="page.isDisabled" :class="{active: isPageActive(page.name)}"> {{ page.name }}</button>
+	<ul class="page">
+        <li>
+            <button type="button" @click="onClickFirstPage" :disabled="isInFirstPage">首页</button>
+        </li>
+        <li>
+            <button type="button" @click="onClickPreviousPage" :disabled="isInFirstPage">上一页</button>
+        </li>
+        <li v-for="page in pages">
+            <!--<button type="button" @click="onClickPage(page.name)" :disabled="page.isDisabled"> {{ page.name }}</button>-->
+            <button type="button" @click="onClickPage(page.name)" :disabled="page.isDisabled" :class="{active: isPageActive(page.name)}"> {{ page.name }}</button>
 <!--</li>-->
-	        </li>
-	        <li>
-	            <button type="button" @click="onClickNextPage" :disabled="isInLastPage">下一页</button>
-	        </li>
-	        <li>
-	            <button type="button" @click="onClickLastPage" :disabled="isInLastPage">尾页</button>
-	        </li>
-	    </ul>
-	<!--</div>-->
+        </li>
+        <li>
+            <button type="button" @click="onClickNextPage" :disabled="isInLastPage">下一页</button>
+        </li>
+        <li>
+            <button type="button" @click="onClickLastPage" :disabled="isInLastPage">尾页</button>
+        </li>
+    </ul>
 </template>
 
 <script>
@@ -104,7 +98,7 @@
 	            return Math.min(this.startPage + this.maxVisibleButtons - 1, this.totalPages)
 	        },
 	        pages: function () {
-	            const range = []
+	            const range = [];
 	            for (let i = this.startPage; i <= this.endPage; i+=1) {
 	                range.push({
 	                    name: i,

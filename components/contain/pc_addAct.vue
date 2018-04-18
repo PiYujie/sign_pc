@@ -15,8 +15,9 @@
 						<option value="t8">创业教育</option>
 					</select>
 				</p>
-				<p><span>活动开始时间：</span><date-picker field="myDate" placeholder="开始时间" v-model="date" format="yyyy/mm/dd" :backward="false" :no-today="true" :forward="true"></date-picker></p>
-				<p><span>活动结束时间：</span><date-picker field="myDateStop" placeholder="截止时间" v-model="date1" format="yyyy/mm/dd" :backward="false" :no-today="true" :forward="true"></date-picker></p>
+				<p><span>活动开始时间：</span>
+				</p>
+				<p><span>活动结束时间：</span></p>
 				<p><span>专业要求：</span>
 					<select name="actType">
 						<option value="t1" selected="selected">考试预约</option>
@@ -68,18 +69,11 @@
 </template>
 
 <script>
-	import 'babel-polyfill'; //因为使用了es6的一些方法，需要babel垫片，如果你项目中已有相关兼容性方案，可忽略
-	import Vue from 'vue';
-	import myDatepicker from 'vue-datepicker-simple/datepicker-2.vue'; //引入对应的组件
+	import $ from 'jQuery';
 	export default{
 		data(){
 			return {
-				date:'',
-				date1:''
 			}
-		},
-		components:{
-			'date-picker': myDatepicker
 		}
 	}
 </script>
@@ -152,12 +146,6 @@
 		border-radius: 8px;
 		cursor: pointer;
 	}
-</style>
-<style type="text/css">
-	.vue-datepicker {
-		float: left;
-	}
-	.vue-datepicker input{
-		border: none !important;
-	}
+	/*.choosejedate{margin:0;}
+    .choosejedate input{ height: 40px;}*/
 </style>

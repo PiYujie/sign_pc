@@ -10,6 +10,7 @@
 					<li><a href="#/index/addAct">新增活动</a></li>
 					<li><a href="#/index/showAct">显示活动信息</a></li>
 					<li><a href="#/index/educeAct">导出活动信息</a></li>
+					<li><a href="#/index/genre">活动类别管理</a></li>
 				</ol>
 			</li>
 			<li>
