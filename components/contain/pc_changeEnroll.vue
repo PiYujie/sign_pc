@@ -8,10 +8,58 @@
 		<p>
 			<span>报名开始时间：</span>
 			<date-picker field="myDate" placeholder="开始时间" v-model="date" format="yyyy/mm/dd" :backward="false" :no-today="true" :forward="true"></date-picker>
+			<select name="hour1" v-model="hours1" class="timer">
+				<option value="9">09</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+				<option value="13">13</option>
+				<option value="14">14</option>
+				<option value="15">15</option>
+				<option value="16">16</option>
+				<option value="17">17</option>
+				<option value="18">18</option>
+				<option value="19">19</option>
+				<option value="20">20</option>
+				<option value="21">21</option>
+			</select>
+			<b>:</b>
+			<select name="minute1" v-model="minute1" class="timer">
+				<option value="0">00</option>
+				<option value="1">10</option>
+				<option value="2">20</option>
+				<option value="3">30</option>
+				<option value="4">40</option>
+				<option value="5">50</option>
+			</select>
 		</p>
 		<p>
 			<span>报名截止时间：</span>
 			<date-picker field="myDate" placeholder="截止时间" v-model="date1" format="yyyy/mm/dd" :backward="false" :no-today="true" :forward="true"></date-picker>
+			<select name="hour2" v-model="hours2" class="timer">
+				<option value="9">09</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+				<option value="13">13</option>
+				<option value="14">14</option>
+				<option value="15">15</option>
+				<option value="16">16</option>
+				<option value="17">17</option>
+				<option value="18">18</option>
+				<option value="19">19</option>
+				<option value="20">20</option>
+				<option value="21">21</option>
+			</select>
+			<b>:</b>
+			<select name="minute2" v-model="minute2" class="timer">
+				<option value="0">00</option>
+				<option value="1">10</option>
+				<option value="2">20</option>
+				<option value="3">30</option>
+				<option value="4">40</option>
+				<option value="5">50</option>
+			</select>
 		</p>
 		<p>
 			<span>是否需要进行签到：</span>
@@ -24,17 +72,24 @@
 
 <script>
 	import 'babel-polyfill'; //因为使用了es6的一些方法，需要babel垫片，如果你项目中已有相关兼容性方案，可忽略
-	import Vue from 'vue';
+//	import Vue from 'vue';
 	import myDatepicker from 'vue-datepicker-simple/datepicker-2.vue'; //引入对应的组件
 	export default{
 		data(){
 			return {
 				date:'',
-				date1:''
+				date1:'',
+				hours1:9,
+				minute1:0,
+				hours2:9,
+				minute2:0
 			}
 		},
 		components:{
 			'date-picker': myDatepicker
+		},
+		mounted(){
+			
 		}
 	}
 </script>
@@ -112,5 +167,16 @@
 	.vue-datepicker{
 		float: left;
     	top: 15px;
+	}
+	/**/
+	.addEnroll p b{
+		float: left;
+		margin-top: 15px;
+	}
+	.addEnroll .timer{
+		/*display: block;*/
+		width: 50px;
+		text-align: center;
+		margin: 15px 5px 0;
 	}
 </style>

@@ -7,7 +7,9 @@
 					<input type="radio" name="sex" id="sex" value="1" checked="checked"/>男
 					<input type="radio" name="sex" id="sex" value="0" />女
 				</p>
-				<p><span>生日：</span><date-picker field="myDate" placeholder="出生日期" v-model="date" format="yyyy/mm/dd" :backward="true" :no-today="true" :forward="false"></date-picker></p>
+				<p><span>生日：</span>
+					<date-picker field="myDate" placeholder="开始时间" v-model="date" format="yyyy/mm/dd" :backward="false" :no-today="true" :forward="true"></date-picker>
+				</p>
 				<p><span>身份证号：</span><input type="text" /></p>
 				<p><span>班级：</span><input type="text" /></p>
 				<p><span>学院：</span>
@@ -46,7 +48,8 @@
 	export default{
 		data(){
 			return {
-				date:''
+				date:'',
+				date1:''
 			}
 		},
 		components:{

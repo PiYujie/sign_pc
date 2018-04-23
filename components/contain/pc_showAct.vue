@@ -51,6 +51,7 @@
 			
 			
 		</div>
+		<!-- 删除框 -->
 		<div class="message" v-show="isDelete">
 			<h3>提示</h3>
 			<b>您确定删除这条记录吗？</b>
