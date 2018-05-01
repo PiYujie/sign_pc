@@ -60,6 +60,8 @@ module.exports = {
     resolve: {
         alias: {
             vue: "vue/dist/vue.js"
+//          '@':resolve('components')
+//          'vendor':path.resolve(__dirname,'./components/vendor')
         }
     },
     // watch: true,

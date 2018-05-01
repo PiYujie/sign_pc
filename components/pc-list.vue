@@ -34,7 +34,7 @@
 					<li><a href="#/index/educeSign">导出签到信息</a></li>
 				</ol>
 			</li>
-			<li>
+			<li v-show="status">
 				<p @click="toShow(4)">
 					<img src="/img/font/siginin2.svg" />
 					<span>学生管理</span>
@@ -45,7 +45,7 @@
 					<li><a href="#/index/changeStu">修改信息</a></li>
 				</ol>
 			</li>
-			<li>
+			<li v-show="status">
 				<p @click="toShow(5)">
 					<img src="/img/font/siginin2.svg" />
 					<span>院系管理</span>
@@ -61,7 +61,7 @@
 					<span>账户管理</span>
 				</p>
 				<ol v-show="num == 6">
-					<li><a href="#/index/showMan">活动管理员管理</a></li>
+					<li v-show="status"><a href="#/index/showMan">活动管理员管理</a></li>
 					<li><a href="#/index/showOwn">个人信息管理</a></li>
 				</ol>
 			</li>
@@ -71,16 +71,27 @@
 </template>
 
 <script>
+	
 	export default{
 		data(){
 			return {
-				num:1
+				num:1,
+				status:''
 			}
 		},
 		methods:{
 			toShow(id){
 				this.num = id;
 			}
+		},
+		mounted(){
+			var status = sessionStorage.getItem("status");
+			if(status==0){
+				this.status = true;
+			}else{
+				this.status = false;
+			}
+			
 		}
 	}
 </script>

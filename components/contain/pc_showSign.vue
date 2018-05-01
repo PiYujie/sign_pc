@@ -26,7 +26,7 @@
 		<div class="listShow">
 			<table border="1" cellspacing="0" cellpadding="1">
 				<tr><th>报名表编号</th><th>活动名称</th><th>签到人数</th><th>报名人数</th><th>签到率</th><th>操作</th></tr>
-				<tr v-for="v in arr"><td>{{v.mes_id}}</td><td>{{v.act_name}}</td><td>{{v.num}}</td><td>{{v.len}}</td><td>{{parseInt(v.num/v.len*100)}}%</td><td><router-link :to="'/index/detailSign/'+v.mes_id">登录到主页面</router-link><a href="#/index/detailSign/:v.mes_id">详情</a></td></tr>
+				<tr v-for="v in arr"><td>{{v.mes_id}}</td><td>{{v.act_name}}</td><td>{{v.num}}</td><td>{{v.len}}</td><td>{{parseInt(v.num/v.len*100)}}%</td><td><router-link :to="'/index/detailSign/'+v.mes_id">详情</router-link></td></tr>
 				
 			</table>
 		</div>
@@ -73,7 +73,6 @@
 				this.isDelete = !this.isDelete;
 			},
 			onPageChange(page) {
-		      	console.log(page)
 		      	this.current = page;
 		      	var _this = this;
 				var arr = [];
@@ -109,7 +108,6 @@
 					data = JSON.parse(data);
 					_this.total = data[0].total;
 					_this.page = Math.ceil(_this.total/9)
-//					console.log(_this.total)
 				}
 			});
 			$.ajax({
@@ -127,7 +125,6 @@
 						}
 						_this.arr = arr;
 					}
-					console.log(data)
 				}
 			});
 		}

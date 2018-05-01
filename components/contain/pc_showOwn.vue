@@ -8,20 +8,18 @@
 				<img src="/img/pic0505.jpg"/>
 			</div>
 			<div class="detail">
-				<p><span>编号：</span><em>dfdsfs</em></p>
-				<p><span>姓名：</span><em>dfdsfs</em></p>
-				<p><span>性别：</span><em>dfdsfs</em></p>
-				<p><span>年龄：</span><em>dfdsfs</em></p>
-				<p><span>身份：</span><em>dfdsfs</em></p>
+				<p><span>编号：</span><em>{{id}}</em></p>
+				<p><span>姓名：</span><em>{{name}}</em></p>
+				<p><span>性别：</span><em>{{sex}}</em></p>
 			</div>
 			<img src="/img/font/change.svg" class="toChange" @click="isShow" title="修改密码"/>
 		</div>
 		<div class="changePass" v-show="changes">
 			<div class="change">
 				<h5>修改密码</h5>
-				<h6><em>原密码：</em><input type="password" /></h6>
-				<h6><em>新密码：</em><input type="password" /></h6>
-				<p><span>确定</span><span @click="isShow()">取消</span></p>
+				<h6><em>原密码：</em><input type="password" v-model="olds"/></h6>
+				<h6><em>新密码：</em><input type="password" v-model="news"/></h6>
+				<p><span @click="isChange">确定</span><span @click="isShow()">取消</span></p>
 			</div>
 		</div>
 		
@@ -30,17 +28,63 @@
 </template>
 
 <script>
+	import $ from 'jQuery';
 	export default{
 		data(){
 			return {
 				changes:false,
-				num:1
+				id:1,
+				name:'',
+				sex:'',
+				olds:'',
+				news:''
 			}
 		},
 		methods:{
 			isShow(){
 				this.changes = !this.changes
+			},
+			isChange(){
+				var _this = this;
+				if(this.olds.length!=0&&this.news.length!=0){
+					$.ajax({
+						type:"post",
+						url:"http://localhost:3000/changePass",
+						data:{
+							id:this.id,
+							olds:_this.olds,
+							news:_this.news
+						},
+						success(data){
+							data = JSON.parse(data);
+							location.href = '#/'
+						}
+					});
+				}
 			}
+		},
+		mounted(){
+			var id = localStorage.getItem("name");
+			var _this = this;
+			id = parseInt(id);
+			this.id = id;
+			$.ajax({
+				type:"post",
+				url:"http://localhost:3000/getManById",
+				data:{
+					id:id
+				},
+				success(data){
+					data = JSON.parse(data);
+					_this.id = data[0].man_id;
+					_this.name = data[0].man_name;
+					if(data[0].man_sex == 0){
+						_this.sex = '男';
+					}else{
+						_this.sex = '女';
+					}
+				}
+			});
 		}
 	}
 </script>
@@ -64,7 +108,7 @@
 	}
 	/*内容框样式*/
 	.cont{
-		width: 600px;height: 200px;
+		width: 420px;height: 200px;
 		margin:20px auto;
 		/*border: 7px double #DCDCDC;*/
 		border: 2px solid #DCDCDC;
@@ -83,15 +127,18 @@
 	.detail{
 		float: left;
 		width: 200px;height: 200px;
-		margin-left: 20px;
+		margin-left: 10px;
 	}
 	.detail p{
-		height: 40px;
-		font:14px/40px "微软雅黑";
+		height: 65px;
+		font:16px/65px "微软雅黑";
 	}
 	.detail p span{
 		float: left;
 		width: 50px;
+	}
+	.detail p em{
+		font-style: normal;
 	}
 	/*点击修改密码*/
 	.toChange{
@@ -145,7 +192,7 @@
 	}
 	.change h6 em{
 		float: left;
-		width: 50px;padding-left: 10px;
+		width: 50px;padding-left: 15px;
 		color: #666666;
 		font-style: normal;
 		font:12px/30px "微软雅黑";
@@ -157,5 +204,6 @@
 		border: 1px solid #DCDCDC;
 		border-radius: 4px;
 		font:12px/28px "微软雅黑";
+		font-style: normal;
 	}
 </style>

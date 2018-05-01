@@ -27,53 +27,121 @@ connect.connect();
 
 //活动相关的操作
 //----------------------------------------------------------------//
-//INSERT INTO activity(act_name, act_address, begin_time, stop_time, act_type, act_num, act_sponsor, academy, major, grade, credit, volunteer, act_text) VALUES ('${req.body.name}','${req.body.address}','${req.body.begin_time}','${req.body.stop_time}',3003,15,'${req.body.sponsor}',null,null,null,0,0.2,'')
 //----------------------------------------------------------------//
-//INSERT INTO activity(act_name, act_address, begin_time, stop_time, act_type, act_num, act_sponsor, academy, major, grade, credit, volunteer, act_text) VALUES ('${req.body.name}','${req.body.address}','${req.body.begin_time}','${req.body.stop_time}',${req.body.genre},${req.body.num},'${req.body.sponsor}',${req.body.academy},${req.body.major},${req.body.grade},${req.body.credit},${req.body.volunteer},${req.body.cont})
 	//新增活动信息
 	app.post("/addAct",function(req,res){
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('新增活动类别')
-		console.log(req.body)
+//		console.log('新增活动类别')
 		connect.query(`INSERT INTO activity(act_name, act_address, begin_time, stop_time, act_type, act_num, act_sponsor, academy, major, grade, credit, volunteer, act_text) VALUES ('${req.body.name}','${req.body.address}','${req.body.begin_time}','${req.body.stop_time}',${req.body.genre},${req.body.num},'${req.body.sponsor}',${req.body.aca},${req.body.major},${req.body.grade},'${req.body.credit}','${req.body.volunteer}','${req.body.cont}')`, function(error, results, fields) {
 			if(error) throw error;
 			res.send(JSON.stringify(results));
 		});
 	})
 	//修改活动信息
-	
+	app.post("/changeAct",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+//		console.log(req.body)
+		connect.query(`UPDATE activity SET act_name='${req.body.name}',act_address='${req.body.address}',begin_time='${req.body.begin_time}',stop_time='${req.body.stop_time}',act_type=${req.body.genre},act_num=${req.body.num},act_sponsor='${req.body.sponsor}',academy=${req.body.aca},major=${req.body.major},grade=${req.body.grade},credit=${req.body.credit},volunteer=${req.body.volunteer},act_text='${req.body.cont}' WHERE act_id = ${req.body.id}`, function(error, results, fields) {
+			if(error) throw error;
+			res.send(JSON.stringify(results));
+		});
+	})
 	//删除活动信息
-	
+	app.post("/delAct",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+//		console.log(req.body)
+		connect.query(`UPDATE activity SET act_state = 0 WHERE act_id = ${req.body.id}`, function(error, results, fields) {
+			if(error) throw error;
+			res.send(JSON.stringify(results));
+		});
+	})
+	//删除活动信息
+	app.post("/deleteAct",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+//		console.log(req.body)
+		connect.query(`DELETE FROM activity WHERE act_id = ${req.body.id}`, function(error, results, fields) {
+			if(error) throw error;
+			res.send(JSON.stringify(results));
+		});
+	})
 	//查询活动条数
 	app.post("/getActTotal",function(req,res){
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('获取报名表条数')
-		connect.query(`SELECT COUNT(*) total from activity`, function(error, results, fields) {
+//		console.log('获取报名表条数')
+		connect.query(`SELECT COUNT(*) total from activity WHERE act_state = 1`, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
 			res.send(JSON.stringify(results));
 		});
 	})
 	
-	//查询活动详情
-	
+	//查询可否删除
+	app.post("/actIsDel",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+		connect.query(`SELECT message.mes_id FROM message,activity,enroll WHERE activity.act_id = message.act_id AND enroll.mes_id = message.mes_id AND activity.act_id = ${req.body.id}`, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
 	//获取所有的活动简略信息
 	app.post("/getAct",function(req,res){
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('获取所有活动信息')
-		connect.query(`SELECT activity.*,genre.gen_name FROM activity,genre WHERE activity.act_type = genre.gen_id LIMIT ${req.body.start},9`, function(error, results, fields) {
+//		console.log('获取所有活动信息')
+		connect.query(`SELECT activity.*,genre.gen_name FROM activity,genre WHERE act_state = 1 AND activity.act_type = genre.gen_id ORDER BY begin_time DESC LIMIT ${req.body.start},9`, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
 			res.send(JSON.stringify(results));
 		});
 	})
-
+	//根据id查询活动名称
+	app.post("/getActById",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+		connect.query(`SELECT * FROM activity WHERE act_id = ${req.body.id}`, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
+	//根据id查询活动名称
+	app.post("/getActName",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+//		console.log('获取活动名称')
+		connect.query(`SELECT act_name,begin_time FROM activity WHERE act_id = ${req.body.id}`, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
+	//获取无对应的活动要求表的活动名称和id
+	app.post("/getActNoMess",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+		connect.query(`SELECT act_id,act_name,begin_time FROM activity WHERE act_state = 1 AND act_id NOT IN ( SELECT act_id FROM message)`, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
 //----------------------------------------------------------------//
 
 
@@ -85,7 +153,7 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('新增活动类别')
+//		console.log('新增活动类别')
 		connect.query(`INSERT INTO genre(gen_name, gen_state) VALUES ('${req.body.name}',1)`, function(error, results, fields) {
 			if(error) throw error;
 			res.send(JSON.stringify(results));
@@ -96,7 +164,7 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('重命名类别')
+//		console.log('重命名类别')
 		connect.query(`UPDATE genre SET gen_name='${req.body.name}',gen_state = ${req.body.state} WHERE gen_id =${req.body.id} `, function(error, results, fields) {
 			if(error) throw error;
 			res.send(JSON.stringify(results));
@@ -107,7 +175,7 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('获取所有活动类别信息')
+//		console.log('获取所有活动类别信息')
 		connect.query(`SELECT * FROM genre WHERE gen_state = 1  LIMIT ${req.body.start},9`, function(error, results, fields) {
 			if(error) throw error;
 			res.send(JSON.stringify(results));
@@ -118,7 +186,7 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('获取活动类型数量')
+//		console.log('获取活动类型数量')
 		connect.query(`SELECT COUNT(*) total from genre WHERE gen_state = 1`, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
@@ -130,7 +198,7 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('获取所有活动类别信息')
+//		console.log('获取所有活动类别信息')
 		connect.query(`SELECT * FROM genre WHERE gen_state = 1`, function(error, results, fields) {
 			if(error) throw error;
 			res.send(JSON.stringify(results));
@@ -142,9 +210,28 @@ connect.connect();
 //----------------------------------------------------------------//
 //----------------------------------------------------------------//
 	//新增报名表信息
-	
-	//修改报名表信息
-	
+	app.post("/addMess",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+//		console.log(req.body)
+		connect.query(`INSERT INTO message(act_id, mes_begin, mes_stop, is_sign) VALUES (${req.body.id},'${req.body.btime}','${req.body.stime}',${req.body.sign})`, function(error, results, fields) {
+			if(error) throw error;
+			res.send(JSON.stringify(results));
+		});
+	})
+	//修改报名表信息 
+	app.post("/updateMess",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+//		console.log('获取报名表条数')
+		connect.query(`UPDATE message SET mes_begin='${req.body.btime}',mes_stop='${req.body.stime}',is_sign=${req.body.sign} WHERE mes_id = ${req.body.id}`, function(error, results, fields) {
+			if(error) throw error;
+			console.log(req .body)
+			res.send(JSON.stringify(results));
+		});
+	})
 	//删除报名表信息
 	
 	//查询报名表条数
@@ -152,7 +239,7 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('获取报名表条数')
+//		console.log('获取报名表条数')
 		connect.query(`SELECT COUNT(*) total from message`, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
@@ -165,14 +252,38 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('获取所有报名表信息')
+//		console.log('获取所有报名表信息')
 		connect.query(`SELECT COUNT(enroll.mes_id) len,message.*,activity.act_name,activity.act_num FROM enroll,message,activity WHERE enroll.mes_id = message.mes_id AND activity.act_id = message.act_id GROUP BY enroll.mes_id LIMIT ${req.body.start},9`, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
 			res.send(JSON.stringify(results));
 		});
 	})
-
+	//通过id查询对应活动的报名人详情 
+	app.post("/detailEnrollById",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+//		console.log('获取所有报名表信息')
+		connect.query(`SELECT enroll.enr_id, enroll.stu_id,student.stu_name,academy.aca_name,major.major_name  FROM enroll,student,academy,major WHERE academy.aca_id = student.academy AND major.major_id = student.major AND enroll.mes_id = ${req.body.id} AND enroll.stu_id = student.stu_id`, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
+	//通过id显示内容
+	app.post("/getMessById",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+//		console.log('获取报名表条数')
+		connect.query(`SELECT message.act_id, message.mes_begin, message.mes_stop,activity.act_name FROM message,activity WHERE message.mes_id = ${req.body.id} AND message.act_id = activity.act_id`, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
+	
 //----------------------------------------------------------------//
 
 //签到相关的操作
@@ -183,7 +294,7 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('获取签到概况')
+//		console.log('获取签到概况')
 		connect.query(`SELECT message.mes_id,SUM(enroll.sign_state) num,COUNT(enroll.mes_id) len,activity.act_name FROM enroll,message,activity WHERE enroll.mes_id = message.mes_id AND activity.act_id = message.act_id GROUP BY enroll.mes_id LIMIT ${req.body.start},9`, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
@@ -196,7 +307,7 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('获取签到详情')
+//		console.log('获取签到详情')
 		connect.query(`SELECT student.stu_id,student.stu_name,student.grade,student.classes,academy.aca_name,major.major_name,enroll.sign_state FROM student,academy,major,enroll WHERE enroll.mes_id = ${req.body.id} AND student.stu_id = enroll.stu_id AND student.academy = academy.aca_id AND student.major = major.major_id LIMIT  ${req.body.start},9`, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
@@ -208,7 +319,7 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('获取签到详情')
+//		console.log('获取签到详情')
 		connect.query(`SELECT student.stu_id,student.stu_name,student.grade,student.classes,academy.aca_name,major.major_name,enroll.sign_state FROM student,academy,major,enroll WHERE enroll.mes_id = ${req.body.id} AND student.stu_id = enroll.stu_id AND student.academy = academy.aca_id AND student.major = major.major_id AND enroll.sign_state = 1 LIMIT  ${req.body.start},9`, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
@@ -220,7 +331,7 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('获取签到详情')
+//		console.log('获取签到详情')
 		connect.query(`SELECT student.stu_id,student.stu_name,student.grade,student.classes,academy.aca_name,major.major_name,enroll.sign_state FROM student,academy,major,enroll WHERE enroll.mes_id = ${req.body.id} AND student.stu_id = enroll.stu_id AND student.academy = academy.aca_id AND student.major = major.major_id AND enroll.sign_state = 0 LIMIT  ${req.body.start},9`, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
@@ -234,16 +345,47 @@ connect.connect();
 //学生相关操作
 //----------------------------------------------------------------//
 //----------------------------------------------------------------//
-	//新增活动信息
-	
-	//修改活动信息
-	
-	//删除活动信息
-	
-	//查询活动条数
-	
-	//查询活动详情
-
+	//添加学生 
+	app.post("/addStu",function(req,res){
+	//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+		connect.query(`INSERT INTO student(stu_name, stu_pass, stu_sex, stu_birth, id_card, academy, major, grade, stu_credit, stu_volunteer, classes, stu_state) VALUES ('${req.body.name}','${req.body.pass}',${req.body.sex},'${req.body.birth}',${req.body.id},${req.body.academy},${req.body.major},${req.body.grade},0,0,${req.body.classes},1)`, function(error, results, fields) {
+			if(error) throw error;
+			res.send(JSON.stringify(results));
+		});
+	})
+	//查询学生信息
+	app.post("/getStu",function(req,res){
+	//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+		connect.query(`SELECT stu_name, stu_sex, stu_birth, id_card, academy.aca_name, major.major_name,academy.aca_id,major.major_id,grade.gra_id, grade.gra_name, stu_credit, stu_volunteer, classes FROM student,academy,major,grade WHERE student.academy = academy.aca_id AND student.major = major.major_id AND student.grade = grade.gra_id AND stu_id =  ${req.body.id}`, function(error, results, fields) {
+			if(error) throw error;
+			res.send(JSON.stringify(results));
+		});
+	})
+	//删除学生 
+	app.post("/delStu",function(req,res){
+	//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+		connect.query(`UPDATE student SET stu_state = 0 WHERE stu_id = ${req.body.id}`, function(error, results, fields) {
+			if(error) throw error;
+			res.send(JSON.stringify(results));
+		});
+	})
+	//修改学生信息 
+	app.post("/changeStu",function(req,res){
+	//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+//		console.log(req.body)
+		connect.query(`UPDATE student SET academy=${req.body.academy},major = ${req.body.major},stu_credit = '${req.body.credit}',stu_volunteer= '${req.body.volunteer}',classes = ${req.body.classes} WHERE stu_id = ${req.body.id}`, function(error, results, fields) {
+			if(error) throw error;
+			res.send(JSON.stringify(results));
+		});
+	})
 
 //----------------------------------------------------------------//
 
@@ -264,7 +406,7 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('获取所有学院信息')
+//		console.log('获取所有学院信息')
 		connect.query(`SELECT * FROM academy WHERE aca_state = 1`, function(error, results, fields) {
 			if(error) throw error;
 			res.send(JSON.stringify(results));
@@ -276,7 +418,7 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('获取报名表条数')
+//		console.log('获取报名表条数')
 		connect.query(`SELECT COUNT(*) total from academy WHERE aca_state = 1`, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
@@ -289,7 +431,7 @@ connect.connect();
 	//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('新增学院')
+//		console.log('新增学院')
 		connect.query(`INSERT INTO academy(aca_name, aca_state) VALUES ('${req.body.name}',1)`, function(error, results, fields) {
 			if(error) throw error;
 			res.send(JSON.stringify(results));
@@ -301,7 +443,7 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('重命名学院')
+//		console.log('重命名学院')
 		connect.query(`UPDATE academy SET aca_name='${req.body.name}',aca_state = ${req.body.state} WHERE aca_id =${req.body.id} `, function(error, results, fields) {
 			if(error) throw error;
 			res.send(JSON.stringify(results));
@@ -330,7 +472,7 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('获取所有专业信息')
+//		console.log('获取所有专业信息')
 		connect.query(`SELECT academy.aca_name,major.major_id,major.major_name,major.major_state,academy.aca_id FROM major,academy WHERE academy.aca_id = major.major_type AND major_state = 1 LIMIT ${req.body.start},9`, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
@@ -342,7 +484,7 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('获取报名表条数')
+//		console.log('获取报名表条数')
 		connect.query(`SELECT COUNT(*) total from major WHERE major_state = 1`, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
@@ -365,7 +507,7 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('新增活动类别')
+//		console.log('新增活动类别')
 		connect.query(`INSERT INTO major(major_name,major_state,major_type) VALUES ('${req.body.name}',1,${req.body.id})`, function(error, results, fields) {
 			if(error) throw error;
 			res.send(JSON.stringify(results));
@@ -376,7 +518,7 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log(res.body)
+//		console.log(res.body)
 		connect.query(`SELECT * FROM major WHERE major_state = 1 AND major_type =  ${req.body.id}`, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
@@ -385,24 +527,111 @@ connect.connect();
 	})
 //----------------------------------------------------------------//
 
-	
+
+//年级相关的操作
+//----------------------------------------------------------------//
+//----------------------------------------------------------------//
+	//获取所有年级信息
+	app.post("/getGrade",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+		connect.query(`SELECT * FROM grade WHERE gra_state = 1`, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
+//----------------------------------------------------------------//
+
+
 //账户相关操作
 //----------------------------------------------------------------//
 //----------------------------------------------------------------//
+	//新增发布者
+	app.post("/addMan",function(req,res){
+		res.append("Access-Control-Allow-Origin","*");
+		connect.query(`INSERT INTO manager(man_name, man_pass, man_type, man_sex) VALUES ('${req.body.name}','123456',1,${req.body.sex})`, function(error, results, fields) {
+			if(error) throw error;
+			res.send(JSON.stringify(results));
+		});
+	})
+	//删除管理员
+	app.post("/delMan",function(req,res){
+		res.append("Access-Control-Allow-Origin","*");
+		connect.query(`DELETE FROM manager WHERE man_id = ${req.body.id}`, function(error, results, fields) {
+			if(error) throw error;
+			res.send(JSON.stringify(results));
+		});
+	})
+	//获取所有发布者信息并分页显示
+	app.post("/getManPage",function(req,res){
+		res.append("Access-Control-Allow-Origin","*");
+		connect.query(`SELECT * FROM manager WHERE man_type = 1 LIMIT ${req.body.start},9`, function(error, results, fields) {
+			if(error) throw error;
+			res.send(JSON.stringify(results));
+		});
+	})
+
+	//获取发布者人数长度（仍存在的）
+	app.post("/getManTotal",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+//		console.log('获取报名表条数')
+		connect.query(`SELECT COUNT(*) total from manager WHERE man_type = 1`, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
 	//获取所有发布者信息
 	app.post("/getMan",function(req,res){
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		console.log('获取所有发布者信息')
+//		console.log('获取所有发布者信息')
 		connect.query(`SELECT * FROM manager`, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
 			res.send(JSON.stringify(results));
 		});
 	})
-
-
+	//获取个人信息
+	app.post("/getManById",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+		connect.query(`SELECT * FROM manager WHERE man_id = ${req.body.id}`, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
+	//修改密码
+	app.post("/changePass",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+//		console.log(req.body)
+		connect.query(`UPDATE manager SET man_pass = ${req.body.news} WHERE man_id = ${req.body.id} AND man_pass = ${req.body.olds}`, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
+	//登录
+	app.post("/login",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+		console.log('获取所有发布者信息')
+		connect.query(`SELECT man_type FROM manager WHERE man_id = ${req.body.name} AND man_pass = '${req.body.pass}'`, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
 //----------------------------------------------------------------//
 //监听端口
 server.listen(3000);

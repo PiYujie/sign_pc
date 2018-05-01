@@ -39,6 +39,7 @@ import major from "./components/contain/pc_major.vue";
 import showMan from "./components/contain/pc_showMan.vue";
 import showOwn from "./components/contain/pc_showOwn.vue";
 //容器组件
+import login from "./components/tab/login.vue";
 import index from "./components/tab/pc-index.vue";
 // 配置路由
 var router = new VueRouter({
@@ -46,7 +47,12 @@ var router = new VueRouter({
 		// 默认进入页面的时候跳转到登录页
 		{
 			path: '/',
-			redirect: '/index/showAct'
+			redirect: '/login'
+		},
+		//登录页面
+		{
+			path:"/login",
+			component:login
 		},
 		//其他页面
 		{
@@ -56,18 +62,18 @@ var router = new VueRouter({
             children:[
             	{
             		path: "addAct",
-           			 component: addAct
+           			component: addAct
             	},
             	{
             		path:"showAct",
             		component:showAct
             	},
             	{
-            		path:"changeAct",
+            		path:"changeAct/:id",
             		component:changeAct
             	},
             	{
-            		path:"detailAct",
+            		path:"detailAct/:id",
             		component:detailAct
             	},
             	{
@@ -79,6 +85,7 @@ var router = new VueRouter({
             		component:genre
             	},
             	{
+            		name:"addById",
             		path:"addEnroll",
             		component:addEnroll
             	},
@@ -91,11 +98,11 @@ var router = new VueRouter({
             		component:educeEnroll
             	},
             	{
-            		path:"changeEnroll",
+            		path:"changeEnroll/:id",
             		component:changeEnroll
             	},
             	{
-            		path:"detailEnroll",
+            		path:"detailEnroll/:id",
             		component:detailEnroll
             	},
             	{

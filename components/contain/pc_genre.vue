@@ -81,25 +81,37 @@
 				var isAdd = false;
 				var _this = this;
 		    	if(this.addName.length==0){
-		    		this.message = '活动名称不可为空！';
 		    		this.isError = true;
+					this.message = '活动名称不可为空！';
+					setTimeout(function(){
+						_this.isError = false;
+						_this.message = '';
+					},1000)
 		    	}else{
 		    		for(var i in this.arr){
 		    			if(this.addName == this.arr[i].gen_name){
-		    				this.message = '该活动类别已存在！';
 		    				this.isError = true;
+							this.message = '该活动类别已存在！';
+							setTimeout(function(){
+								_this.isError = false;
+								_this.message = '';
+							},1000)
 		    				this.addName = '';
 		    				isAdd = false;
 		    				break;
-		    			}else{
+		    			}else if(/^[0-9]*$/.test(this.addName)){
 		    				this.isError = true;
-		    				console.log('成功')
+							this.message = '活动名称不可为数字！';
+							setTimeout(function(){
+								_this.isError = false;
+								_this.message = '';
+							},1000)
+		    				isAdd = false;
+		    			}else{
 		    				isAdd = true;
 		    			}
 		    		}
 		    		if(isAdd==true){
-		    			
-	    				this.message = '添加成功';
 	    				$.ajax({
 							type:"post",
 							url:"http://localhost:3000/addGenre",
@@ -107,9 +119,14 @@
 								name:this.addName
 							},
 							success(data){
-								data = JSON.parse(data);
-								_this.isError = false;
-								_this.isAdd = false;
+								_this.isError = true;
+								_this.message = '添加成功！';
+								setTimeout(function(){
+									_this.isError = false;
+									_this.message = '';
+									_this.isShow = false;
+									_this.isAdd = false;
+								},1000)
 							}
 						});
 						this.getGenre();
@@ -134,8 +151,13 @@
 						state:1
 					},
 					success(data){
-						data = JSON.parse(data);
-						_this.getGenre();
+						_this.isError = true;
+						_this.message = '修改成功！';
+						setTimeout(function(){
+							_this.isError = false;
+							_this.message = '';
+							_this.getGenre();
+						},1000)
 					}
 				});
 				this.isChange = !this.isChange;
@@ -150,7 +172,6 @@
 				var _this = this;
 				this.deleteVal = $(e.target).prev().prev().html();
 				this.deleteId = $(e.target).prev().prev().prev().html();
-				console.log(this.deleteId,this.deleteVal);
 				this.isDelete = !this.isDelete;
 				this.isError = false;
 			},
@@ -165,8 +186,13 @@
 						state:0
 					},
 					success(data){
-						data = JSON.parse(data);
-						_this.getGenre();
+						_this.isError = true;
+						_this.message = '删除成功！';
+						setTimeout(function(){
+							_this.isError = false;
+							_this.message = '';
+							_this.getGenre();
+						},1000)
 					}
 				});
 				this.isDelete = !this.isDelete;
@@ -199,7 +225,6 @@
 			},
 			//分页
 			onPageChange(page) {
-		      	console.log(page)
 		      	this.current = page;
 		      	var _this = this;
 				var arr = [];
@@ -232,7 +257,6 @@
 					data = JSON.parse(data);
 					_this.total = data[0].total;
 					_this.page = Math.ceil(_this.total/9)
-//					console.log(_this.total)
 				}
 			});
 			this.getGenre();
@@ -332,18 +356,21 @@
 	.toClick{
 		cursor: pointer;
 	}
-	.message{
+	/*提示信息*/
+    .message{
 		position: absolute;
 		z-index: 5;
 		width: 280px;
-		top: 41%;left: 50%;
+		top: 40%;left: 50%;
 		margin-left: -140px;
-		/*background-color: white;*/
+		border-radius: 5px;
+		background-color: red;
 	}
 	.message p{
-		width: 100%;height: 100%;
-		font:bold 16px/30px "微软雅黑";
-		color: red;
+		width: 250px;height: 100%;
+		padding: 15px;
+		font:bold 18px/30px "微软雅黑";
+		color: white;
 		border:none;
 		text-align: center;
 	}

@@ -32,20 +32,20 @@
 					<th>名称</th>
 					<th>类别</th>
 					<th>地点</th>
-					<th>时间</th>
+					<!--<th>时间</th>-->
 					<th>人数</th>
-					<th colspan="3">操作</th>
+					<th colspan="2">操作</th>
 				</tr>
 				<tr v-for="v in arr">
 					<td>{{v.act_id}}</td>
 					<td>{{v.act_name}}</td>
 					<td>{{v.gen_name}}</td>
 					<td>{{v.act_address}}</td>
-					<td>{{v.begin_time}}</td>
+					<!--<td>{{v.begin_time}}</td>-->
 					<td>{{v.act_num}}</td>
-					<td><a href="#/index/detailAct">详情</a></td>
-					<td><a href="#/index/changeAct">编辑</a></td>
-					<td @click="toDelete" class="toDelete">删除</td>
+					<td><router-link :to="'/index/detailAct/'+v.act_id">详情</router-link></td>
+					<td><router-link :to="'/index/changeAct/'+v.act_id">编辑</router-link></td>
+					<!--<td @click="toDelete" class="toDelete">删除</td>-->
 				</tr>
 			</table>
 			
@@ -75,7 +75,8 @@
 				//数据的总条数
 				total:0,
 				//当前数据的总页数
-				page:1
+				page:1,
+				id:''
 			}
 		},
 		methods: {
@@ -131,7 +132,6 @@
 					data = JSON.parse(data);
 					_this.total = data[0].total;
 					_this.page = Math.ceil(_this.total/9)
-					console.log(_this.total)
 				}
 			});
 			$.ajax({
@@ -317,6 +317,12 @@
 		text-align: center;
 		cursor: pointer;
 	}
+	/*.listShow{
+		    width: 100%;
+    height: 400px;
+    overflow: auto;
+    overflow-x: hidden;
+	}*/
 	/*删除按钮样式*/
 	.toDelete{
 		cursor: pointer;

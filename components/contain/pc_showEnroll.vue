@@ -41,10 +41,16 @@
 				<td>{{v.act_num}}</td>
 				<td>{{v.mes_stop}}</td>
 				<td>{{parseInt(v.len/v.act_num*100)}}%</td>
-				<td><a href="#/index/detailEnroll">详情</a></td>
-				<td><a href="#/index/changeEnroll">编辑</a></td>
+				<td><router-link :to="'/index/detailEnroll/'+v.mes_id">详情</router-link></td>
+				<td><router-link :to="'/index/changeEnroll/'+v.mes_id">编辑</router-link></td>
 			</tr>
 		</table>
+		
+		<!-- 提示信息 -->
+		<div class="message" v-show="isError">
+			<p v-text="message"></p>
+		</div>
+		
 		<xpage :total-pages="page" :total="total" :current-page="current"  @pagechanged="onPageChange" v-show="total>9"/>
 	</div>
 </template>
@@ -56,14 +62,18 @@
 		data() {
 			return {
 				isShow: false,
-				isDelete:false,
+				isError:false,
 				arr:'',
 				//当前的页码
 				current:1,
 				//数据的总条数
 				total:0,
 				//当前数据的总页数
-				page:1
+				page:1,
+				//提示信息内容
+				message:'123',
+				//点击时当前id
+				id:''
 			}
 		},
 		components:{
@@ -80,13 +90,9 @@
 				this.isShow = true
 			},
 			toAddAct(){
-				location.href = "#/index/addAct"
-			},
-			toDelete(){
-				this.isDelete = !this.isDelete;
+				location.href = "#/index/addEnroll"
 			},
 			onPageChange(page) {
-		      	console.log(page)
 		      	this.current = page;
 		      	var _this = this;
 				var arr = [];
@@ -119,7 +125,6 @@
 					data = JSON.parse(data);
 					_this.total = data[0].total;
 					_this.page = Math.ceil(_this.total/9)
-//					console.log(_this.total)
 				}
 			});
 			$.ajax({
@@ -131,7 +136,6 @@
 				},
 				success(data){
 					data = JSON.parse(data);
-					console.log(data)
 					if(data.length!=0){
 						for(var i in data){
 							arr.push(data[i])
@@ -269,5 +273,24 @@
 	}
 	a{
 		color: #fff;
+	}
+	.message{
+		position: absolute;
+		z-index: 5;
+		width: 280px;
+		top: 41%;left: 50%;
+		margin-left: -140px;
+		line-height: 30px;
+		background-color: rgba(255,100,0,0.5);
+	}
+	.message p{
+		width: 100%;height: 100%;
+		font:bold 16px/30px "微软雅黑";
+		color: red;
+		border:none;
+		text-align: center;
+	}
+	.pointer{
+		cursor: pointer;
 	}
 </style>

@@ -118,20 +118,33 @@
 				this.getAllAca();
 			},
 			yesAdd(){
+				var _this = this;
 				if(this.addVal.length==0){
 					this.isError = true;
-					this.message = "专业名称不可为空！";
+					this.message = '专业名称不可为空！';
+					setTimeout(function(){
+						_this.isError = false;
+						_this.message = '';
+					},1000)
 				}else if(!/[\u4e00-\u9fa5]/g.test(this.addVal)){
 					this.isError = true;
-					this.message = "专业名称只能为中文！";
+					this.message = '专业名称只能为中文！';
+					setTimeout(function(){
+						_this.isError = false;
+						_this.message = '';
+					},1000)
 				}else{
 					var val = this.addVal;
 					var isAdd = false;
 					for (var i in this.arr) {
 						if(this.arr[i].major_name == val){
-							this.isError = true;
 							this.addVal = '';
-							this.message = "该专业已存在";
+							this.isError = true;
+							this.message = '该专业已存在';
+							setTimeout(function(){
+								_this.isError = false;
+								_this.message = '';
+							},1000)
 							isAdd = false;
 							break;
 						}else{
@@ -141,7 +154,11 @@
 					if(isAdd){
 						var _this = this;
 						this.isError = true;
-						this.message = "添加成功";
+						this.message = '添加成功';
+						setTimeout(function(){
+							_this.isError = false;
+							_this.message = '';
+						},1000)
 						$.ajax({
 							type:"post",
 							url:"http://localhost:3000/addMajor",
@@ -174,7 +191,6 @@
 				this.state = 1;
 				this.updateMajor();
 				this.isCha = false;
-				location.reload();
 			},
 			//删除专业
 			delMajor(e){
@@ -188,7 +204,6 @@
 				this.state = 0;
 				this.updateMajor();
 				this.isDel = false;
-				location.reload();
 			},
 			//获取所有学院
 			getAllAca(){
@@ -223,6 +238,13 @@
 					},
 					success(data){
 						data = JSON.parse(data);
+						_this.isError = true;
+						_this.message = '成功！';
+						setTimeout(function(){
+							_this.isError = false;
+							_this.message = '';
+							location.reload();
+						},1000)
 					}
 				});
 			},
@@ -411,18 +433,21 @@
 	.toClick {
 		cursor: pointer;
 	}
-	.message{
+	/*提示信息*/
+    .message{
 		position: absolute;
 		z-index: 5;
 		width: 280px;
-		top: 37%;left: 50%;
+		top: 40%;left: 50%;
 		margin-left: -140px;
-		/*background-color: white;*/
+		border-radius: 5px;
+		background-color: red;
 	}
 	.message p{
-		width: 100%;height: 100%;
-		font:bold 16px/30px "微软雅黑";
-		color: red;
+		width: 250px;height: 100%;
+		padding: 15px;
+		font:bold 18px/30px "微软雅黑";
+		color: white;
 		border:none;
 		text-align: center;
 	}

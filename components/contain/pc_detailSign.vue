@@ -2,13 +2,14 @@
 	<div class="leftCont">
 		<h3>{{title}}签到详情</h3>
 		<div class="showWay">
+			<span @click="export2Excel">导出</span>
 			<select name="showWay" v-model="showWay">
 				<option value="0" selected="selected">全部</option>
 				<option value="1">已签到</option>
 				<option value="2">未签到</option>
 			</select>
 		</div>
-		<table border="1" cellspacing="0" cellpadding="1">
+		<table border="1" cellspacing="0" cellpadding="1" id="tableData">
 			<tr>
 				<th>序号</th>
 				<th>学号</th>
@@ -47,6 +48,22 @@
 			}
 		},
 		methods: {
+			export2Excel() {
+				require.ensure([], () => {
+					const { export_json_to_excel } = require('../vendor/Export2Excel');
+					//表头
+					const tHeader = ['序号', '学号', '学院', '专业', '年级','班级','报名学生姓名','签到情况'];
+					//对应字段
+					const filterVal = ['num','id','aca','major','gra','cla','name','state'];
+					//数据源
+					const list = this.arr;
+					const data = this.formatJson(filterVal, list);
+					export_json_to_excel(tHeader,data,'列表excel');
+				})
+			},
+			formatJson(filterVal, jsonData) {
+				return jsonData.map(v => filterVal.map(j => v[j]))
+			},
 			clear() {
 				$("#input").val("")
 			},

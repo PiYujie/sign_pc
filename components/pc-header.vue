@@ -2,12 +2,12 @@
 	<div class="header">
 		<div class="head">
 			<img src="/img/login-logo.png"/>
-			<ul>
+			<!--<ul>
 				<li><a href="#">报名管理</a></li>
 				<li><a href="#">签到管理</a></li>
 				<li><a href="#">学生管理</a></li>
 				<li><a href="#">账户管理</a></li>
-			</ul>
+			</ul>-->
 		</div>
 	</div>
 </template>

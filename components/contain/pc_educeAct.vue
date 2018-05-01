@@ -19,28 +19,22 @@
 			<h6>
 				<p>活动地点：<input type="text" v-model="address" /></p>
 				<p>
-					<em @click="toShow">查询</em><em>导出</em>
+					<em @click="toShow">查询</em><em >导出</em>
 				</p>
 			</h6>
 		</div>
 		<div class="list" v-show="isShow">
-			<table border="1" cellspacing="0" cellpadding="1">
+			<table border="1" cellspacing="0" cellpadding="1" id="tableData">
 				<tr><th><input type="checkbox" name="checkAct" id="checkAct" value="all" />全选</th><th>活动编号</th><th>活动名称</th><th>开始时间</th><th>举行地点</th></tr>
 				<tr><td><input type="checkbox" name="checkAct" id="checkAct" value="all" />1</td><td>1000258</td><td>参与吃多福多寿</td><td>2017-02-15 14：00</td><td>A201</td></tr>
-				<tr><td><input type="checkbox" name="checkAct" id="checkAct" value="all" />2</td><td>1000258</td><td>参与吃多福多寿</td><td>2017-02-15 14：00</td><td>A201</td></tr>
-				<tr><td><input type="checkbox" name="checkAct" id="checkAct" value="all" />3</td><td>1000258</td><td>参与吃多福多寿</td><td>2017-02-15 14：00</td><td>A201</td></tr>
-				<tr><td><input type="checkbox" name="checkAct" id="checkAct" value="all" />4</td><td>1000258</td><td>参与吃多福多寿</td><td>2017-02-15 14：00</td><td>A201</td></tr>
-				<tr><td><input type="checkbox" name="checkAct" id="checkAct" value="all" />5</td><td>1000258</td><td>参与吃多福多寿</td><td>2017-02-15 14：00</td><td>A201</td></tr>
-				<tr><td><input type="checkbox" name="checkAct" id="checkAct" value="all" /></td><td>1000258</td><td>参与吃多福多寿</td><td>2017-02-15 14：00</td><td>A201</td></tr>
-				<tr><td><input type="checkbox" name="checkAct" id="checkAct" value="all" /></td><td>1000258</td><td>参与吃多福多寿</td><td>2017-02-15 14：00</td><td>A201</td></tr>
-				<tr><td><input type="checkbox" name="checkAct" id="checkAct" value="all" /></td><td>1000258</td><td>参与吃多福多寿</td><td>2017-02-15 14：00</td><td>A201</td></tr>
-				<tr><td><input type="checkbox" name="checkAct" id="checkAct" value="all" /></td><td>1000258</td><td>参与吃多福多寿</td><td>2017-02-15 14：00</td><td>A201</td></tr>
+				
 			</table>
 		</div>
 	</div>
 </template>
 
 <script>
+	import $ from 'jQuery';
 	export default{
 		data(){
 			return {
@@ -49,6 +43,22 @@
 			}
 		},
 		methods:{
+			export2Excel() {
+				require.ensure([], () => {
+					const { export_json_to_excel } = require('../vendor/Export2Excel');
+					//表头
+					const tHeader = ['序号', 'IMSI', 'MSISDN', '证件号码', '姓名'];
+					//对应字段
+					const filterVal = ['','','','',''];
+					//数据源
+					const list = this.tableData;
+					const data = this.formatJson(filterVal, list);
+					export_json_to_excel(tHeader,data,'列表excel');
+				})
+			},
+			formatJson(filterVal, jsonData) {
+				return jsonData.map(v => filterVal.map(j => v[j]))
+			},
 			toShow(){
 				this.isShow = true
 			}

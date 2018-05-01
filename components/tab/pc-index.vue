@@ -3,7 +3,7 @@
 		<xheader />
 		<div class="content">
 			<div class="title">
-				<p><span>你好，wmtimes!</span><img src="/img/font/exit.svg"/></p>
+				<p><span>你好，wmtimes!</span><img src="/img/font/exit.svg" @click="exit"/></p>
 				<em>站内公告：【维护】进行维护通知</em>
 			</div>
 			<div class="cont">
@@ -26,6 +26,19 @@
 			xheader,
 			xfooter,
 			xlist
+		},
+		methods:{
+			exit(){
+				sessionStorage.setItem("state",false);
+				sessionStorage.setItem("status",'');
+				location.href = '#/'
+			}
+		},
+		mounted(){
+			var state = sessionStorage.getItem("state");
+			if(state == 'false'){
+				location.href = '#/';
+			}
 		}
 	}
 </script>

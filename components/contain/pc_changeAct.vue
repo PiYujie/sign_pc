@@ -2,121 +2,75 @@
 	<div class="leftCont">
 		<h3>修改活动信息</h3>
 			<div class="cont">
-				<p><span>活动名称：</span><input type="text" /></p>
+				<p><span>活动名称：</span><input type="text" v-model="name"/></p>
 				<p><span>活动类别：</span>
-					<select name="actType">
-						<option value="t1" selected="selected">考试预约</option>
-						<option value="t2">学术讲座</option>
-						<option value="t3">科技创新</option>
-						<option value="t4">文化活动</option>
-						<option value="t5">科学竞赛</option>
-						<option value="t6">学术讲座</option>
-						<option value="t7">名著阅读</option>
-						<option value="t8">创业教育</option>
+					<select name="genType" v-model="genre">
+						<option v-for="a in arrGen" :value="a.gen_id">
+							{{a.gen_name}}
+						</option>
 					</select>
 				</p>
+				<p><span>主办单位：</span><input type="text" v-model="sponsor"/></p>
+				<p><span>年级限制：</span>
+					<select name="gradeType" v-model="graVal">
+						<option value="0">全部</option>
+						<option v-for="a in arrGra" :value="a.gra_id" >
+							{{a.gra_name}}
+						</option>
+					</select>
+				</p>
+				<p><span>所需人数：</span><input type="text" v-model="num"/></p>
 				<p>
 					<span>活动开始时间：</span>
-					<date-picker field="myDate" placeholder="开始时间" v-model="date" format="yyyy/mm/dd" :backward="false" :no-today="true" :forward="true"></date-picker>
+					<date-picker field="myDate" placeholder="开始时间" v-model="date1" format="yyyy/mm/dd" :backward="false" :no-today="true" :forward="true"></date-picker>
 					<select name="hour1" v-model="hours1" class="timer">
-						<option value="9">09</option>
-						<option value="10">10</option>
-						<option value="11">11</option>
-						<option value="12">12</option>
-						<option value="13">13</option>
-						<option value="14">14</option>
-						<option value="15">15</option>
-						<option value="16">16</option>
-						<option value="17">17</option>
-						<option value="18">18</option>
-						<option value="19">19</option>
-						<option value="20">20</option>
-						<option value="21">21</option>
+						<option value="00">00</option>
+				<option v-for="h in hour" :value="h">{{h}}</option>
 					</select>
 					<b>:</b>
 					<select name="minute1" v-model="minute1" class="timer">
-						<option value="0">00</option>
-						<option value="1">10</option>
-						<option value="2">20</option>
-						<option value="3">30</option>
-						<option value="4">40</option>
-						<option value="5">50</option>
+						<option value="00">00</option>
+				<option v-for="m in minute" :value="m">{{m}}</option>
 					</select>
 				</p>
+				<p><span>义工奖励：</span>
+					<input type="text" v-model="volunteer"/>
+				</p>
 				<p><span>活动结束时间：</span>
-					<date-picker field="myDate" placeholder="截止时间" v-model="date1" format="yyyy/mm/dd" :backward="false" :no-today="true" :forward="true"></date-picker>
+					<date-picker field="myDate" placeholder="截止时间" v-model="date2" format="yyyy/mm/dd" :backward="false" :no-today="true" :forward="true"></date-picker>
 					<select name="hour2" v-model="hours2" class="timer">
-						<option value="9">09</option>
-						<option value="10">10</option>
-						<option value="11">11</option>
-						<option value="12">12</option>
-						<option value="13">13</option>
-						<option value="14">14</option>
-						<option value="15">15</option>
-						<option value="16">16</option>
-						<option value="17">17</option>
-						<option value="18">18</option>
-						<option value="19">19</option>
-						<option value="20">20</option>
-						<option value="21">21</option>
+						<option value="00">00</option>
+				<option v-for="h in hour" :value="h">{{h}}</option>
 					</select>
 					<b>:</b>
 					<select name="minute2" v-model="minute2" class="timer">
-						<option value="0">00</option>
-						<option value="1">10</option>
-						<option value="2">20</option>
-						<option value="3">30</option>
-						<option value="4">40</option>
-						<option value="5">50</option>
+						<option value="00">00</option>
+						<option v-for="m in minute" :value="m">{{m}}</option>
 					</select>
-					
-				</p>
-				<p><span>专业要求：</span>
-					<select name="actType">
-						<option value="t1" selected="selected">考试预约</option>
-						<option value="t2">学术讲座</option>
-						<option value="t3">科技创新</option>
-						<option value="t4">文化活动</option>
-						<option value="t5">科学竞赛</option>
-						<option value="t6">学术讲座</option>
-						<option value="t7">名著阅读</option>
-						<option value="t8">创业教育</option>
-					</select>
-					<select name="actType">
-						<option value="t1" selected="selected">考试预约</option>
-						<option value="t2">学术讲座</option>
-						<option value="t3">科技创新</option>
-						<option value="t4">文化活动</option>
-						<option value="t5">科学竞赛</option>
-						<option value="t6">学术讲座</option>
-						<option value="t7">名著阅读</option>
-						<option value="t8">创业教育</option>
-					</select>
-				</p>
-				<!--<p><span>学院要求：</span>
-					<select name="actType">
-						<option value="t1" selected="selected">考试预约</option>
-						<option value="t2">学术讲座</option>
-						<option value="t3">科技创新</option>
-						<option value="t4">文化活动</option>
-						<option value="t5">科学竞赛</option>
-						<option value="t6">学术讲座</option>
-						<option value="t7">名著阅读</option>
-						<option value="t8">创业教育</option>
-					</select>
-				</p>-->
-				<p><span>主办单位：</span><input type="text" /></p>
-				<p><span>所需人数：</span><input type="text" /></p>
-				<p><span>义工奖励：</span>
-					<input type="text" />
 				</p>
 				<p><span>学分奖励：</span>
-					<input type="text" />
+					<input type="text" v-model="credit"/>
 				</p>
-				<p><span>举行地点：</span><input type="text" /></p>
-				<p class="allWidth"><span>活动内容：</span><textarea name="cont" rows="8" cols="87"></textarea></p>
+				<p><span>报名限制：</span>
+					<select name="acaType" v-model="acaVal" @change="getMajor">
+						<option value="0">全部</option>
+						<option v-for="a in arrAca" :value="a.aca_id" >
+							{{a.aca_name}}
+						</option>
+					</select>
+					<select name="majorType" v-model="majorVal">
+						<option value="0" selected="selected">全部</option>
+						<option v-for="a in arrMaj" :value="a.major_id">{{a.major_name}}</option>
+					</select>
+				</p>
+				<p><span>举行地点：</span><input type="text" v-model="address"/></p>
+				<p class="allWidth"><span>活动内容：</span><textarea name="cont" rows="8" cols="87" v-model="cont"></textarea></p>
 			</div>
-			<button>提交</button>
+			<button @click="update">提交</button>
+			<!-- 提示信息 -->
+			<div class="message" v-show="isError">
+				<p v-text="message"></p>
+			</div>
 		</div>
 		
 </template>
@@ -125,19 +79,282 @@
 	import 'babel-polyfill'; //因为使用了es6的一些方法，需要babel垫片，如果你项目中已有相关兼容性方案，可忽略
 	import Vue from 'vue';
 	import myDatepicker from 'vue-datepicker-simple/datepicker-2.vue'; //引入对应的组件
+	import $ from 'jQuery';
 	export default{
 		data(){
 			return {
-				date:'',
 				date1:'',
-				hours1:9,
-				minute1:0,
-				hours2:9,
-				minute2:0
+				date2:'',
+				hours1:'',
+				minute1:'',
+				hours2:'',
+				minute2:'',
+				hour:'',
+				//提示信息
+				message:'',
+				isError:false,
+				//分钟数组
+				minute:'',
+				arr:'',
+				//活动名称
+				name:'',
+				//人数
+				num:'',
+				//主办方
+				sponsor:'',
+				//内容
+				cont:'',
+				//学分
+				credit:'',
+				//义工
+				volunteer:'',
+				//地址
+				address:'',
+				//年级要求
+				arrGra:'',
+				graVal:0,
+				//活动类型
+				genre:'',
+				arrGen:'',
+				//学院要求
+				acaVal:0,
+				arrAca:'',
+				//专业要求
+				majorVal:0,
+				arrMaj:''
 			}
 		},
 		components:{
 			'date-picker': myDatepicker
+		},
+		methods:{
+			//设置小时
+			setHour(){
+				var hourArr = [];
+				for (var i = 9;i < 24;i++) {
+					var h;
+					if(i<10){
+						h = '0'+i;
+					}else{
+						h = i;
+					}
+					hourArr.push(h)
+				}
+				this.hour = hourArr;
+			},
+			//设置分钟
+			setMinute(){
+				var minuteArr = [];
+				for (var i = 10;i < 60;i+=10) {
+					var h;
+					if(i<10){
+						h = '0'+i;
+					}else{
+						h = i;
+					}
+					minuteArr.push(h)
+				}
+				this.minute = minuteArr;
+			},
+			//获取活动类别
+			getGenre(){
+				var _this = this;
+				var arrGen = [];
+				$.ajax({
+					type:"post",
+					url:"http://localhost:3000/getGenreOnce",
+					success(data){
+						data = JSON.parse(data);
+						if(data.length!=0){
+							for (var i in data) {
+								arrGen.push(data[i]);
+							}
+						}
+						_this.arrGen = arrGen;
+						_this.genre = arrGen[0].gen_id;
+					}
+				});
+			},
+			//获取专业
+			getMajor(){
+				var _this = this;
+				var arrMaj = [];
+				if(this.acaVal!=0){
+					var id = parseInt(this.acaVal)
+					$.ajax({
+						type:"post",
+						url:"http://localhost:3000/getMajorById",
+						data:{
+							id:id
+						},
+						success(data){
+							data = JSON.parse(data);
+							if(data.length!=0){
+								for (var i in data) {
+									arrMaj.push(data[i]);
+								}
+							}
+							_this.arrMaj = arrMaj;
+						}
+					});
+				}
+			},
+			//获取学院
+			getAca(){
+				var _this = this;
+				var arrAca = [];
+				$.ajax({
+					type:"post",
+					url:"http://localhost:3000/getAcaOnce",
+					success(data){
+						data = JSON.parse(data);
+						if(data.length!=0){
+							for (var i in data) {
+								arrAca.push(data[i]);
+							}
+						}
+						_this.arrAca = arrAca;
+					}
+				});
+			},
+			//获取年级
+			getGrade(){
+				var _this = this;
+				var arrGra = [];
+				$.ajax({
+					type:"post",
+					url:"http://localhost:3000/getGrade",
+					success(data){
+						data = JSON.parse(data);
+						if(data.length!=0){
+							for (var i in data) {
+								arrGra.push(data[i]);
+							}
+						}
+						_this.arrGra = arrGra;
+					}
+				});
+			},
+			//获取所有活动信息
+			getAct(){
+				var _this = this;
+				$.ajax({
+					type:"post",
+					url:"http://localhost:3000/getActById",
+					data:{
+						id:this.$route.params.id
+					},
+					success(data){
+						data = JSON.parse(data);
+						console.log(data)
+						_this.name = data[0].act_name;
+						_this.cont = data[0].act_text;
+						_this.address = data[0].act_address;
+						_this.credit = data[0].credit;
+						_this.num = data[0].act_num;
+						_this.volunteer = data[0].volunteer;
+						_this.sponsor = data[0].act_sponsor;
+						var b_year = data[0].begin_time.split(' ')[0];
+						_this.date1 = b_year;
+						var s_year = data[0].stop_time.split(' ')[0];
+						_this.date2 = s_year;
+						var b_time = data[0].begin_time.split(' ')[1];
+						var s_time = data[0].stop_time.split(' ')[1];
+						var b_hour = b_time.split(':')[0];
+						var s_hour = s_time.split(':')[0];
+						var b_minute = b_time.split(':')[1];
+						var s_minute = s_time.split(':')[1];
+						_this.hours1 = b_hour;
+						_this.hours2 = s_hour;
+						_this.minute1 = b_minute;
+						_this.minute2 = s_minute;
+						_this.acaVal = data[0].academy;
+						_this.getMajor();
+						_this.majorVal = data[0].major;
+						_this.isReturn()
+					}
+				});
+			},
+			//上传
+			update(){
+				var _this = this;
+				var btime = this.date1 + ' ' + this.hours1+':'+this.minute1;
+				var stime = this.date2 + ' ' + this.hours2+':'+this.minute2;
+				console.log(this.credit)
+				$.ajax({
+					type:"post",
+					url:"http://localhost:3000/changeAct",
+					data:{
+						name:this.name,
+						address:this.address,
+						begin_time:btime,
+						stop_time:stime,
+						genre:this.genre,
+						num:this.num,
+						sponsor:this.sponsor,
+						aca:this.acaVal,
+						major:this.majorVal,
+						grade:this.graVal,
+						credit:this.credit,
+						volunteer:this.volunteer,
+						cont:this.cont,
+						id:this.$route.params.id
+					},
+					success(data){
+						data = JSON.parse(data);
+						this.isError = true;
+						this.message = '修改成功';
+						setTimeout(function(){
+							_this.isError = false;
+							_this.message = '';
+							location.href = '#/index/showAct';
+						},1000)
+						
+					}
+				});
+			},
+			isReturn(){
+				var _this = this;
+				//当前时间
+				var times = new Date();
+				var year = times.getFullYear();
+				var month = times.getMonth()+1;
+				var day = times.getDate();
+				//活动开始时间
+				var byear = this.date1.split('/')[0];
+				var bmon = this.date1.split('/')[1];
+				var bday = this.date1.split('/')[2];
+				byear = parseInt(byear);
+				bmon = parseInt(bmon)
+				bday = parseInt(bday)
+				//当前时间小于活动开始时间时将允许删除
+				if(year>byear||(byear==year&&((month>bmon)||(month==bmon&&day>=bday)))){
+					this.isError = true;
+					this.message = '该活动已结束，不可修改！';
+					setTimeout(function(){
+						_this.isError = false;
+						_this.message = '';
+						_this.isDelete = false;
+						location.href = '#/index/showAct'
+					},2000)
+				}
+			}
+		},
+		mounted(){
+			var _this = this;
+			//设置小时
+			this.setHour();
+			//设置分钟
+			this.setMinute();
+			//获取年级
+			this.getGrade();
+			//获取学院
+			this.getAca();
+			//获取活动类别
+			this.getGenre();
+			this.id = this.$route.params.id;
+			this.getAct();
+//			this.isReturn();
 		}
 	}
 </script>
@@ -151,6 +368,7 @@
 		color: #fff;
 		margin-right: 10px;
 		background-color: rgba(255, 100, 0, 0.3);
+		position: relative;
 	}
 	/*标题*/
 	h3{
@@ -168,7 +386,7 @@
 	/*每一个内容样式*/
 	.cont p{
 		width: 360px;height: 30px;
-		padding: 0 10px 10px;
+		padding: 0 10px 9px;
 		float: left;
 		font:12px/30px "微软雅黑";
 	}
@@ -203,7 +421,7 @@
 		display: block;
 		border: none;
 		padding: 0;
-		margin: 10px auto;
+		margin: 0 auto;
 		width: 80px;height: 30px;
 		font: 14px/30px "微软雅黑";
 		color: #FFFFFF;
@@ -232,5 +450,23 @@
 		height: 30px;
 		width: 110px;
 		margin-right: 10px;
+	}
+	/*提示信息*/
+    .message{
+		position: absolute;
+		z-index: 5;
+		width: 280px;
+		top: 40%;left: 50%;
+		margin-left: -140px;
+		border-radius: 5px;
+		background-color: red;
+	}
+	.message p{
+		width: 250px;height: 100%;
+		padding: 15px;
+		font:bold 18px/30px "微软雅黑";
+		color: white;
+		border:none;
+		text-align: center;
 	}
 </style>

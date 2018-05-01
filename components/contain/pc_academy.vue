@@ -96,20 +96,33 @@
 				this.isAdd = false;
 			},
 			yesAdd(){
+				var _this = this;
 				if(this.addVal.length==0){
 					this.isError = true;
-					this.message = "学院名称不可为空！";
+					this.message = '学院名称不可为空！';
+					setTimeout(function(){
+						_this.isError = false;
+						_this.message = '';
+					},1000)
 				}else if(!/[\u4e00-\u9fa5]/g.test(this.addVal)){
 					this.isError = true;
-					this.message = "学院名称只能为中文！";
+					this.message = '学院名称只能为中文！';
+					setTimeout(function(){
+						_this.isError = false;
+						_this.message = '';
+					},1000)
 				}else{
 					var val = this.addVal;
 					var isAdd = false;
 					for (var i in this.arr) {
 						if(this.arr[i].aca_name == val){
 							this.isError = true;
+							this.message = '该学院已存在！';
+							setTimeout(function(){
+								_this.isError = false;
+								_this.message = '';
+							},1000)
 							this.addVal = '';
-							this.message = "该学院已存在";
 							isAdd = false;
 							break;
 						}else{
@@ -118,8 +131,6 @@
 					}
 					if(isAdd){
 						var _this = this;
-						this.isError = true;
-						this.message = "添加成功";
 						$.ajax({
 							type:"post",
 							url:"http://localhost:3000/addAca",
@@ -128,20 +139,17 @@
 							},
 							success(data){
 								data = JSON.parse(data);
-								_this.addVal = '';
-								_this.isError = false;
-								_this.message = '';
-								_this.isAdd = false;
 								_this.isError = true;
+								_this.message = '添加成功！';
 								setTimeout(function(){
+									_this.isError = false;
+									_this.message = '';
+									_this.addVal = '';
+									_this.isAdd = false;
 									location.reload();
 								},1000)
-								
-//								$('.add').css('display','none');
-//								$('.message').css('display','none')
 							}
 						});
-//						this.getAllAca();
 					}
 				}
 			},
@@ -152,11 +160,16 @@
 				this.chaVal = $(e.target).prev().html();
 			},
 			yesCha(){
+				var _this = this;
 				this.state = 1;
 				this.updateAca();
 				this.isError = true;
-				this.message = "修改成功";
+				this.message = '修改成功！';
+				setTimeout(function(){
+					_this.isError = false;
+					_this.message = '';
 					location.reload();
+				},1000)
 			},
 			noCha(){
 				this.isChange = false;
@@ -189,18 +202,28 @@
 				});
 			},
 			yesDel(){
-				console.log("1"+this.del)
+				var _this = this;
 				this.isDel();
-				console.log("4"+this.del)
 				if(this.del){
 					this.state = 0;
 					this.chaVal = 
 					this.updateAca();
-					location.reload();
-					this.isDelete = false;
+					this.isError = true;
+					this.message = '已成功删除该学院';
+					setTimeout(function(){
+						_this.isError = false;
+						_this.message = '';
+						location.reload();
+					},1000)
+//					location.reload();
+//					this.isDelete = false;
 				}else{
 					this.isError = true;
-					this.message = "该学院仍有专业开设，不可删除！！";
+					this.message = '该学院仍有专业开设，不可删除！';
+					setTimeout(function(){
+						_this.isError = false;
+						_this.message = '';
+					},1000)
 				}
 				var _this = this;
 				setTimeout(function(){
@@ -248,7 +271,6 @@
 					},
 					success(data){
 						data = JSON.parse(data);
-//						location.reload();
 					}
 				});
 		   	},
@@ -383,18 +405,21 @@
 	.pointer{
 		cursor: pointer;
 	}
-	.message{
+	/*提示信息*/
+    .message{
 		position: absolute;
 		z-index: 5;
 		width: 280px;
-		top: 41%;left: 50%;
+		top: 40%;left: 50%;
 		margin-left: -140px;
-		/*background-color: white;*/
+		border-radius: 5px;
+		background-color: red;
 	}
 	.message p{
-		width: 100%;height: 100%;
-		font:bold 16px/30px "微软雅黑";
-		color: red;
+		width: 250px;height: 100%;
+		padding: 15px;
+		font:bold 18px/30px "微软雅黑";
+		color: white;
 		border:none;
 		text-align: center;
 	}

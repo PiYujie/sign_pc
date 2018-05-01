@@ -11,69 +11,49 @@
 				<p>
 					<span>活动开始时间：</span>
 					<date-picker field="myDate" placeholder="开始时间" v-model="begin_time" format="yyyy/mm/dd" :backward="false" :no-today="true" :forward="true"></date-picker>
-					<select name="hour1" v-model="hours1" class="timer">
-						<option value="9">09</option>
-						<option value="10">10</option>
-						<option value="11">11</option>
-						<option value="12">12</option>
-						<option value="13">13</option>
-						<option value="14">14</option>
-						<option value="15">15</option>
-						<option value="16">16</option>
-						<option value="17">17</option>
-						<option value="18">18</option>
-						<option value="19">19</option>
-						<option value="20">20</option>
-						<option value="21">21</option>
+					<!-- 设置开始的小时 -->
+					<select name="begin_hour" v-model="b_hour" class="timer">
+						<option value="00">00</option>
+						<option v-for="h in hour" :value="h.val">{{h.name}}</option>
 					</select>
 					<b>:</b>
-					<select name="minute1" v-model="minute1" class="timer">
-						<option value="0">00</option>
-						<option value="1">10</option>
-						<option value="2">20</option>
-						<option value="3">30</option>
-						<option value="4">40</option>
-						<option value="5">50</option>
+					<!-- 设置分钟 -->
+					<select name="begin_minute" v-model="b_minute" class="timer">
+						<option value="00">00</option>
+						<option v-for="m in minute" :value="m.val">{{m.name}}</option>
 					</select>
 				</p>
 				<p><span>活动结束时间：</span>
 					<date-picker field="myDate" placeholder="截止时间" v-model="stop_time" format="yyyy/mm/dd" :backward="false" :no-today="true" :forward="true"></date-picker>
-					<select name="hour2" v-model="hours2" class="timer">
-						<option value="9">09</option>
-						<option value="10">10</option>
-						<option value="11">11</option>
-						<option value="12">12</option>
-						<option value="13">13</option>
-						<option value="14">14</option>
-						<option value="15">15</option>
-						<option value="16">16</option>
-						<option value="17">17</option>
-						<option value="18">18</option>
-						<option value="19">19</option>
-						<option value="20">20</option>
-						<option value="21">21</option>
+					<select name="stop_hour" v-model="s_hour" class="timer">
+						<option value="00">00</option>
+						<option v-for="h in hour" :value="h.val">{{h.name}}</option>
 					</select>
 					<b>:</b>
-					<select name="minute2" v-model="minute2" class="timer">
-						<option value="0">00</option>
-						<option value="1">10</option>
-						<option value="2">20</option>
-						<option value="3">30</option>
-						<option value="4">40</option>
-						<option value="5">50</option>
+					<!-- 设置分钟 -->
+					<select name="s_minute" v-model="s_minute" class="timer">
+						<option value="00">00</option>
+						<option v-for="m in minute" :value="m.val">{{m.name}}</option>
 					</select>
-					
 				</p>
-				<p><span>专业要求：</span>
+				<p><span>报名限制：</span>
 					<select name="acaType" v-model="acaVal" @change="getMajor">
-						<option value="0000">全部</option>
+						<option value="0">全部</option>
 						<option v-for="a in arrAca" :value="a.aca_id" >
 							{{a.aca_name}}
 						</option>
 					</select>
 					<select name="majorType" v-model="majorVal">
-						<option value="0000" selected="selected">全部</option>
+						<option value="0" selected="selected">全部</option>
 						<option v-for="a in arrMaj" :value="a.major_id">{{a.major_name}}</option>
+					</select>
+				</p>
+				<p><span>年级限制：</span>
+					<select name="gradeType" v-model="graVal">
+						<option value="0">全部</option>
+						<option v-for="a in arrGra" :value="a.gra_id" >
+							{{a.gra_name}}
+						</option>
 					</select>
 				</p>
 				<p><span>主办单位：</span><input type="text" v-model="sponsor" @blur="textName"/></p>
@@ -88,12 +68,12 @@
 				<p class="allWidth"><span>活动内容：</span><textarea name="cont" rows="8" cols="87" v-model="content" @blur="textNotNull"></textarea></p>
 			</div>
 			<button @click="upload">提交</button>
-			<div class="mess" v-show="isError">
-				<h4>提示:</h4>
-				<h5>
-					{{message}}
-				</h5>
+			
+			<!-- 提示信息 -->
+			<div class="message" v-show="isError">
+				<p v-text="message"></p>
 			</div>
+		
 		</div>
 		
 </template>
@@ -111,21 +91,36 @@
 				begin_time:'',
 				hours1:9,
 				minute1:0,
+					//小时
+				b_hour:'00',
+					//分钟
+				b_minute:'00',
 				//活动结束时间
 				stop_time:'',
 				hours2:9,
 				minute2:0,
+					//小时
+				s_hour:'00',
+					//分钟
+				s_minute:'00',
+				//小时数组
+				hour:'',
+				//分钟数组
+				minute:'',
 				//活动举行地点
 				address:'',
 				//活动类型
 				genre:'',
 				arrGen:'',
 				//学院要求
-				acaVal:'0000',
+				acaVal:0,
 				arrAca:'',
 				//专业要求
-				majorVal:'0000',
+				majorVal:0,
 				arrMaj:'',
+				//年级要求
+				arrGra:'',
+				graVal:0,
 				//主办单位
 				sponsor:'',
 				//人数要求
@@ -147,9 +142,13 @@
 			'date-picker': myDatepicker
 		},
 		mounted(){
+			//页面加载时显示时分的数据
+			this.setHour();
+			this.setMinute();
 			var _this = this;
 			var arrGen = [];
 			var arrAca = [];
+			var arrGra = [];
 			//获取活动类别
 			$.ajax({
 				type:"post",
@@ -179,13 +178,52 @@
 					_this.arrAca = arrAca;
 				}
 			});
+			//获取所有年级
+			$.ajax({
+				type:"post",
+				url:"http://localhost:3000/getGrade",
+				success(data){
+					data = JSON.parse(data);
+					if(data.length!=0){
+						for (var i in data) {
+							arrGra.push(data[i]);
+						}
+					}
+					_this.arrGra = arrGra;
+				}
+			});
 		},
 		methods:{
+			//设置小时
+			setHour(){
+				var hourArr = [];
+				for (var i = 9;i < 24;i++) {
+					var obj = {}
+					if (i<10) {
+						obj.name = '0'+i;
+					}else{
+						obj.name = i;
+					}
+					obj.val = i;
+					hourArr.push(obj)
+				}
+				this.hour = hourArr;
+			},
+			//设置分钟
+			setMinute(){
+				var minuteArr = [];
+				for (var i = 10;i < 60;i+=10) {
+					var obj = {}
+					obj.name = i;
+					obj.val = i;
+					minuteArr.push(obj)
+				}
+				this.minute = minuteArr;
+			},
 			getMajor(){
 				var _this = this;
 				var arrMaj = [];
-				console.log(this.acaVal)
-				if(this.acaVal!='0000'){
+				if(this.acaVal!=0){
 					var id = parseInt(this.acaVal)
 					$.ajax({
 						type:"post",
@@ -246,7 +284,6 @@
 				}else{
 					this.isUpdate = true;
 					this.num = parseInt(this.num)
-					console.log(typeof(this.num))
 				}
 			},
 			//验证学分和义工
@@ -305,6 +342,7 @@
 				}else{
 					//判断截止日期年月日是否大于开始日期
 					//验证年月日
+					
 					if(year2<year1||(year2>=year1 && month2<month1)||day2<day1){
 						this.isError = true;
 						this.isUpdate = false;
@@ -313,10 +351,10 @@
 							_this.isError = false;
 						},1000)
 					}else if(year1==year2&&month1==month2&&day2==day1){
-						if(this.hours2>this.hours1){
+						if(this.s_hour>this.b_hour){
 							this.isUpdate = true;
-						}else if(this.hours2==this.hours1){
-							if(this.minute1<this.minute2){
+						}else if(this.s_hour==this.b_hour){
+							if(this.b_minute<this.s_minute){
 								this.isUpdate = true;
 							}else{
 								this.isError = true;
@@ -337,7 +375,6 @@
 					}else{
 						this.isUpdate = true;
 					}
-					
 				}
 				if(this.content.length==0||this.address.length==0||this.credit.length==0||this.volunteer.length==0||this.num.length==0||this.name.length==0||this.sponsor.length==0){
 					this.isError = true;
@@ -355,7 +392,8 @@
 				var _this = this;
 				var academy;
 				var major;
-				var bengin = this.begin_time + ' ' +this.hours1 + ':' +this.minute1;
+				var bengin = this.begin_time + ' ' +this.b_hour + ':' +this.b_minute;
+				var stops = this.stop_time + ' ' +this.s_hour + ':' +this.s_minute;
 				if(this.acaVal=='0000'){
 					academy = 0;
 				}else{
@@ -373,13 +411,13 @@
 						name:_this.name,
 						address:_this.address,
 						begin_time:bengin,
-						stop_time:_this.stop_time,
+						stop_time:stops,
 						genre:_this.genre,
 						num:_this.num,
 						sponsor:_this.sponsor,
 						aca:academy,
 						major:major,
-						grade:2013,
+						grade:_this.graVal,
 						credit:_this.credit,
 						volunteer:_this.volunteer,
 						cont:_this.content
@@ -387,7 +425,9 @@
 					success(data){
 						data = JSON.parse(data)
 						var id = data.insertId;
-						location.href = '#index/addEnroll?' + id;
+						_this.$router.push({name:'addById',params:{
+							id:id
+						}})
 					}
 				});
 			}
@@ -422,7 +462,7 @@
 	/*每一个内容样式*/
 	.cont p{
 		width: 360px;height: 30px;
-		padding: 0 10px 10px;
+		padding: 0 10px 9px;
 		float: left;
 		font:12px/30px "微软雅黑";
 	}
@@ -457,7 +497,7 @@
 		display: block;
 		border: none;
 		padding: 0;
-		margin: 10px auto;
+		margin: 0 auto;
 		width: 80px;height: 30px;
 		font: 14px/30px "微软雅黑";
 		color: #FFFFFF;
@@ -488,25 +528,22 @@
 		width: 110px;
 		margin-right: 10px;
 	}
-	/*提示信息样式设置*/
-	.mess{
+	/*提示信息*/
+    .message{
 		position: absolute;
-		width: 200px;
-		padding: 10px;
+		z-index: 5;
+		width: 280px;
 		top: 40%;left: 50%;
-		margin-left: -110px;
-		background-color: #DCDCDC;
-		color: red;
-		font: 14px/30px "微软雅黑";
+		margin-left: -140px;
+		border-radius: 5px;
+		background-color: red;
 	}
-	.mess h4{
-		height: 30px;
-		margin-bottom: 10px;
-		border-bottom: 1px solid #666;
-	}
-	.mess h5{
-		width: 100%;
+	.message p{
+		width: 250px;height: 100%;
+		padding: 15px;
+		font:bold 18px/30px "微软雅黑";
+		color: white;
+		border:none;
 		text-align: center;
-		margin: 0 0 10px;
 	}
 </style>

@@ -3,75 +3,32 @@
 		<h3>报名详情</h3>
 		<table border="1" cellspacing="0" cellpadding="1">
 			<tr>
-				<th>序号</th>
-				<th>活动名称</th>
-				<th>学号</th>
-				<th>报名学生姓名</th>
+				<th>编号</th>
+				<th>活动学号</th>
+				<th>姓名</th>
+				<th>学院</th>
+				<th>专业</th>
 			</tr>
-			<tr>
-				<td>1</td>
-				<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-				<td>2014441705</td>
-				<td>张三</td>
+			<tr v-for="a in arr">
+				<td>{{a.enr_id}}</td>
+				<td>{{a.stu_id}}</td>
+				<th>{{a.stu_name}}</th>
+				<td>{{a.aca_name}}</td>
+				<td>{{a.major_name}}</td>
 			</tr>
-			<tr>
-				<td>2</td>
-				<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-				<td>2014441705</td>
-				<td>张三</td>
-			</tr>
-			<tr>
-				<td>3</td>
-				<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-				<td>2014441705</td>
-				<td>张三</td>
-			</tr>
-			<tr>
-				<td>4</td>
-				<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-				<td>2014441705</td>
-				<td>张三</td>
-			</tr>
-			<tr>
-				<td>5</td>
-				<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-				<td>2014441705</td>
-				<td>张三</td>
-			</tr>
-			<tr>
-				<td>6</td>
-				<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-				<td>2014441705</td>
-				<td>张三</td>
-			</tr>
-			<tr>
-				<td>7</td>
-				<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-				<td>2014441705</td>
-				<td>张三</td>
-			</tr>
-			<tr>
-				<td>8</td>
-				<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-				<td>2014441705</td>
-				<td>张三</td>
-			</tr>
-			<tr>
-				<td>9</td>
-				<td>2017年“数创杯”全国大学生数学建模挑战赛</td>
-				<td>2014441705</td>
-				<td>张三</td>
-			</tr>
+			
 		</table>
 	</div>
 </template>
 
 <script>
+	import $ from 'jQuery';
 	export default {
 		data() {
 			return {
 				isShow: false,
-				isDelete:false
+				isDelete:false,
+				arr:''
 			}
 		},
 		methods: {
@@ -90,6 +47,28 @@
 			toDelete(){
 				this.isDelete = !this.isDelete;
 			}
+		},
+		mounted(){
+			var arr = [];
+			var _this = this;
+			var id = this.$route.params.id;
+			$.ajax({
+				type:"post",
+				url:"http://localhost:3000/detailEnrollById",
+				data:{
+					id:id
+				},
+				success(data){
+					data = JSON.parse(data)
+					if(data.length!=0){
+						for (var i in data) {
+							arr.push(data[i])
+						}
+						_this.arr = arr;
+					}
+					console.log(data)
+				},
+			});
 		}
 	}
 </script>
