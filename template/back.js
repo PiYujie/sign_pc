@@ -113,7 +113,7 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-		connect.query(`SELECT * FROM activity WHERE act_id = ${req.body.id}`, function(error, results, fields) {
+		connect.query(`SELECT activity.*,genre.gen_name FROM activity,genre WHERE activity.act_type = genre.gen_id AND act_id = ${req.body.id}`, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
 			res.send(JSON.stringify(results));
@@ -124,10 +124,8 @@ connect.connect();
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
-//		console.log('获取活动名称')
 		connect.query(`SELECT act_name,begin_time FROM activity WHERE act_id = ${req.body.id}`, function(error, results, fields) {
 			if(error) throw error;
-	//		console.log(results)
 			res.send(JSON.stringify(results));
 		});
 	})
@@ -139,6 +137,26 @@ connect.connect();
 		connect.query(`SELECT act_id,act_name,begin_time FROM activity WHERE act_state = 1 AND act_id NOT IN ( SELECT act_id FROM message)`, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
+	//根据活动的名称，类别或举行地址查询活动信息
+	app.post("/getActByOther",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+		connect.query(`SELECT activity.*,genre.gen_name FROM activity,genre WHERE activity.act_type = genre.gen_id AND activity.act_name like '%${req.body.name}%' AND genre.gen_name LIKE '%${req.body.genre}%' AND activity.act_address LIKE '%${req.body.address}%' LIMIT ${req.body.start},9`, function(error, results, fields) {
+			if(error) throw error;
+			res.send(JSON.stringify(results));
+		});
+	})
+	//根据活动的名称，类别或举行地址查询活动信息
+	app.post("/getActByOtherTotal",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+		connect.query(`SELECT COUNT(activity.act_id) total FROM activity,genre WHERE activity.act_type = genre.gen_id AND activity.act_name like '%${req.body.name}%' AND genre.gen_name LIKE '%${req.body.genre}%' AND activity.act_address LIKE '%${req.body.address}%'`, function(error, results, fields) {
+			if(error) throw error;
 			res.send(JSON.stringify(results));
 		});
 	})
@@ -259,6 +277,42 @@ connect.connect();
 			res.send(JSON.stringify(results));
 		});
 	})
+	//根据id查询所有的报名简介
+	app.post("/getMesById",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+//		console.log('获取所有报名表信息')
+		connect.query(`SELECT COUNT(enroll.mes_id) len,message.*,activity.act_name,activity.act_num FROM enroll,message,activity WHERE enroll.mes_id = message.mes_id AND activity.act_id = message.act_id AND message.mes_id = ${req.body.id} `, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
+	//根据name查询所有的报名简介
+	app.post("/getMesByName",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+//		console.log('获取所有报名表信息')
+		connect.query(`SELECT COUNT(enroll.mes_id) len,message.*,activity.act_name,activity.act_num FROM enroll,message,activity WHERE enroll.mes_id = message.mes_id AND activity.act_id = message.act_id AND activity.act_name LIKE '%${req.body.name}%' GROUP BY enroll.mes_id LIMIT ${req.body.start},9`, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
+	//根据name查询所有的报名信息管理条数
+	app.post("/getMesByNameTotal",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+//		console.log('获取所有报名表信息')
+		connect.query(`SELECT COUNT(message.mes_id) total FROM message,activity WHERE activity.act_name LIKE '%${req.body.name}%' AND message.act_id = activity.act_id`, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
 	//通过id查询对应活动的报名人详情 
 	app.post("/detailEnrollById",function(req,res){
 		//解决跨域问题
@@ -301,7 +355,30 @@ connect.connect();
 			res.send(JSON.stringify(results));
 		});
 	})
-
+	//根据id显示签到简略
+	app.post("/getSignId",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+//		console.log('获取签到概况')
+		connect.query(`SELECT message.mes_id,SUM(enroll.sign_state) num,COUNT(enroll.mes_id) len,activity.act_name FROM enroll,message,activity WHERE enroll.mes_id = message.mes_id AND activity.act_id = message.act_id AND message.mes_id = ${req.body.id} GROUP BY enroll.mes_id `, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
+	//根据活动名称获取所有签到情况
+	app.post("/getSignByName",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+//		console.log('获取签到概况')
+		connect.query(`SELECT message.mes_id,SUM(enroll.sign_state) num,COUNT(enroll.mes_id) len,activity.act_name FROM enroll,message,activity WHERE enroll.mes_id = message.mes_id AND activity.act_name LIKE '%${req.body.name}%' AND activity.act_id = message.act_id GROUP BY enroll.mes_id LIMIT ${req.body.start},9`, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
 	//根据id显示所有签到情况
 	app.post("/getSignById",function(req,res){
 		//解决跨域问题

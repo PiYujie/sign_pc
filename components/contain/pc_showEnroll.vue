@@ -1,27 +1,17 @@
 <template>
 	<div class="leftCont">
 		<h3>报名表信息</h3>
-		<div class="search" id="searchBar">
-			<span>显示活动类别：</span>
-			<select name="actType">
-				<option value="all" selected="selected">全部</option>
-				<option value="t2">学术讲座</option>
-				<option value="t3">科技创新</option>
-				<option value="t4">文化活动</option>
-				<option value="t5">科学竞赛</option>
-				<option value="t6">学术讲座</option>
-				<option value="t7">名著阅读</option>
-				<option value="t8">创业教育</option>
-				<option value="t9">考试预约</option>
-			</select>
+		<div class="search">
+			<span @click="getMesAll">显示所有</span>
 			<p>
-				<img class="none" src="/img/font/sousuo.svg" v-show="isShow" />
-				<input type="text" id="input" v-show="isShow" autofocus="autofocus" />
-				<img class="none" v-show="isShow" @click="clear" src="/img/font/no.svg" />
-				<span @click="toShow" v-show="!isShow"><img src="/img/font/sousuo.svg"/><b>搜索</b></span>
-
+				<select name="searchType" v-model="search">
+					<option value="id">通过id查询</option>
+					<option value="name">通过名称查询</option>
+				</select>
+				<input type="text" v-model="val"/>
+				<img src="/img/font/search.svg" @click="searchVal"/>
+				<img @click="clear" src="/img/font/no.svg" />
 			</p>
-			<em @click="notShow" v-show="isShow">取消</em>
 			<strong><img src="/img/font/add.svg" title="新增" @click="toAddAct()"/></strong>
 		</div>
 		<table border="1" cellspacing="0" cellpadding="1">
@@ -73,7 +63,13 @@
 				//提示信息内容
 				message:'123',
 				//点击时当前id
-				id:''
+				id:'',
+				//搜索方式
+				search:'id',
+				//input框内容
+				val:'',
+				//判断是否为搜索的分页显示
+				isPage:0
 			}
 		},
 		components:{
@@ -81,7 +77,7 @@
 		},
 		methods: {
 			clear() {
-				$("#input").val("")
+				this.val = ''
 			},
 			notShow() {
 				this.isShow = false;
@@ -92,13 +88,135 @@
 			toAddAct(){
 				location.href = "#/index/addEnroll"
 			},
+			//根据活动的名称，类别或举行地址查询活动信息
+			getActByOther(name,mess,numPage){
+				var _this = this;
+				var arr = [];
+				$.ajax({
+					type:"post",
+					url:"http://localhost:3000/getMesByName",
+					async:true,
+					data:{
+						start:numPage,
+						name:name
+					},
+					success(data){
+						data = JSON.parse(data);
+						if(data.length!=0){
+							for(var i in data){
+								arr.push(data[i])
+							}
+							_this.arr = arr;
+						}else{
+							_this.isError = true;
+							_this.message = mess;
+							setTimeout(function(){
+								_this.isError = false;
+								_this.message = '';
+							},1000)
+						}
+					}
+				});
+				$.ajax({
+					type:"post",
+					url:"http://localhost:3000/getMesByNameTotal",
+					data:{
+						name:name,
+					},
+					success(data){
+						data = JSON.parse(data);
+						_this.total = data[0].total;
+						console.log(_this.total)
+						_this.page = Math.ceil(_this.total/9)
+					}
+				});
+			},
+			//input框改变内容搜索
+			searchVal(){
+				var way = this.search;
+				var _this = this;
+				var arr = [];
+				if(this.val.length!=0){
+					switch(way){
+						case 'id':
+							if(/^[0-9]*$/.test(this.val)){
+								$.ajax({
+									type:"post",
+									url:"http://localhost:3000/getMesById",
+									async:true,
+									data:{
+										id:parseInt(this.val)
+									},
+									success(data){
+										data = JSON.parse(data);
+										console.log()
+										if(data[0].len!=0){
+											for(var i in data){
+												arr.push(data[i])
+											}
+											_this.arr = arr;
+											_this.total = 1;
+											_this.page = 1;
+										}else{
+											_this.isError = true;
+											_this.message = '无该编号报名管理信息存在！';
+											_this.val = '';
+											setTimeout(function(){
+												_this.isError = false;
+												_this.message = '';
+											},1000)
+										}
+									}
+								});
+							}
+						break;
+						default:
+							this.getActByOther(this.val,'该活动无对应报名信息!',0);
+						break;
+					}
+					this.isPage = 1;
+				}
+			},
+			//获取所有报名信息管理表
+			getMesAll(){
+				this.isPage = 0;
+				var _this = this;
+				var arr = [];
+				$.ajax({
+					type:"post",
+					url:"http://localhost:3000/getMesTotal",
+					async:true,
+					success(data){
+						data = JSON.parse(data);
+						_this.total = data[0].total;
+						_this.page = Math.ceil(_this.total/9)
+					}
+				});
+				$.ajax({
+					type:"post",
+					url:"http://localhost:3000/getMes",
+					async:true,
+					data:{
+						start:0
+					},
+					success(data){
+						data = JSON.parse(data);
+						if(data.length!=0){
+							for(var i in data){
+								arr.push(data[i])
+							}
+							_this.arr = arr;
+						}
+					}
+				});
+			},
 			onPageChange(page) {
 		      	this.current = page;
 		      	var _this = this;
 				var arr = [];
 		     	 $.ajax({
 					type:"post",
-					url:"http://localhost:3000/getAca",
+					url:"http://localhost:3000/getMes",
 					data:{
 						start:(page-1)*9
 					},
@@ -115,35 +233,7 @@
 		    }
 		},
 		mounted(){
-			var _this = this;
-			var arr = [];
-			$.ajax({
-				type:"post",
-				url:"http://localhost:3000/getMesTotal",
-				async:true,
-				success(data){
-					data = JSON.parse(data);
-					_this.total = data[0].total;
-					_this.page = Math.ceil(_this.total/9)
-				}
-			});
-			$.ajax({
-				type:"post",
-				url:"http://localhost:3000/getMes",
-				async:true,
-				data:{
-					start:0
-				},
-				success(data){
-					data = JSON.parse(data);
-					if(data.length!=0){
-						for(var i in data){
-							arr.push(data[i])
-						}
-						_this.arr = arr;
-					}
-				}
-			});
+			this.getMesAll();
 		}
 	}
 </script>
@@ -177,19 +267,6 @@
 	table tr {
 		height: 28px;
 	}
-	/*搜索栏样式设置*/
-	
-	.search {
-		width: 100%;
-		height: 40px;
-		box-sizing: border-box;
-		padding: 5px 10px;
-	}
-	
-	.search span {
-		float: left;
-		font: 14px/30px "微软雅黑";
-	}
 	/*下拉菜单*/
 	
 	select {
@@ -202,74 +279,65 @@
 	select option{
 		color: #000;
 	}
-	/*搜索框*/
-	
-	.search p {
+	/*搜索边框样式及位置设置*/
+	.search{
+		width: 100%;height: 28px;
+		margin: 4px 0;
+	}
+	.search p{
 		float: left;
-		width: 300px;
-		height: 22px;
-		border: 1px solid #fff;
-		border-radius: 14px;
-		position: relative;
+		width: 450px;
+		height: 26px;
+		font:14px/24px "微软雅黑";
 		padding: 0 10px;
-		margin: 3px 10px 3px 70px;
-		/*margin: 0 auto;*/
+		border-radius: 15px;
+		border:1px solid #fff;
 	}
-	
-	.search p img {
+	/*搜索下拉菜单样式设置*/
+	.search select{
 		float: left;
-		width: 16px;
-		height: 16px;
-		margin-top: 3px;
+		height: 24px;
+		background-color: rgba(0, 0, 0, 0);
+		font: 14px/24px "微软雅黑";
+		color: #fff;
 	}
-	
-	.search em {
-		cursor: pointer;
-		font-style: normal;
-		font: 12px/28px "微软雅黑";
+	.search option{
+		color: #000;
 	}
-	/*定位样式*/
-	
-	.search p span {
-		position: absolute;
-		width: 100%;
-		height: 16px;
-		font: 12px/15px "微软雅黑";
-		margin-top: 3px;
-		left: 0;
-		text-align: center;
-	}
-	
-	.search p span img {
-		float: none;
-		vertical-align: text-bottom;
-		margin: 0;
-	}
-	
-	.search p span b {
-		padding-left: 5px;
-	}
-	/*搜索框*/
-	
-	.search p input {
+	/*搜索框设置*/
+	.search input{
 		float: left;
-		width: 255px;
-		height: 22px;
+		width: 282px;
+		height: 24px;
 		padding-left: 5px;
 		background-color: rgba(255, 255, 255, 0);
 	}
-	/*新增按钮样式*/
-	.search strong {
+	/*图标设置*/
+	.search p img {
+		float: left;
+		width: 20px;
+		height: 20px;
+		margin: 2px 0;
+		margin-left: 7px;
+	}
+	/*添加设置*/
+	.search strong{
 		float: right;
 		width: 20px;
 		height: 20px;
-		margin: 5px 0;
+		margin: 2px 0;
 	}
-	
-	.search strong img {
+	.search strong img{
 		border: 0;
 		width: 100%;
 		cursor: pointer;
+	}
+	/*显示所有按钮显示*/
+	.search span{
+		cursor: pointer;
+		/*float: left;*/
+		margin-left: 10px;
+		font:14px/26px "微软雅黑";
 	}
 	a{
 		color: #fff;
@@ -278,15 +346,16 @@
 		position: absolute;
 		z-index: 5;
 		width: 280px;
-		top: 41%;left: 50%;
+		top: 40%;left: 50%;
 		margin-left: -140px;
-		line-height: 30px;
-		background-color: rgba(255,100,0,0.5);
+		border-radius: 5px;
+		background-color: red;
 	}
 	.message p{
-		width: 100%;height: 100%;
-		font:bold 16px/30px "微软雅黑";
-		color: red;
+		width: 250px;height: 100%;
+		padding: 15px;
+		font:bold 18px/30px "微软雅黑";
+		color: white;
 		border:none;
 		text-align: center;
 	}

@@ -77,6 +77,6 @@ module.exports = {
     devServer: {
         contentBase: "./public",
         inline: true, //自动刷新
-        port: 9999
+        port: 9990
     }
 };

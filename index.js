@@ -16,16 +16,13 @@ import addAct from "./components/contain/pc_addAct.vue";
 import showAct from "./components/contain/pc_showAct.vue";
 import changeAct from "./components/contain/pc_changeAct.vue";
 import detailAct from "./components/contain/pc_detailAct.vue";
-import educeAct from "./components/contain/pc_educeAct.vue";
 import genre from "./components/contain/pc_genre.vue";
 //报名
 import addEnroll from "./components/contain/pc_addEnroll.vue";
 import showEnroll from "./components/contain/pc_showEnroll.vue";
-import educeEnroll from "./components/contain/pc_educeEnroll.vue";
 import changeEnroll from "./components/contain/pc_changeEnroll.vue";
 import detailEnroll from "./components/contain/pc_detailEnroll.vue";
 //签到
-import educeSign from "./components/contain/pc_educeSign.vue";
 import showSign from "./components/contain/pc_showSign.vue";
 import detailSign from "./components/contain/pc_detailSign.vue";
 //学生
@@ -77,10 +74,6 @@ var router = new VueRouter({
             		component:detailAct
             	},
             	{
-            		path:"educeAct",
-            		component:educeAct
-            	},
-            	{
             		path:"genre",
             		component:genre
             	},
@@ -94,20 +87,12 @@ var router = new VueRouter({
             		component:showEnroll
             	},
             	{
-            		path:"educeEnroll",
-            		component:educeEnroll
-            	},
-            	{
             		path:"changeEnroll/:id",
             		component:changeEnroll
             	},
             	{
             		path:"detailEnroll/:id",
             		component:detailEnroll
-            	},
-            	{
-            		path:"educeSign",
-            		component:educeSign
             	},
             	{
             		path:"showSign",

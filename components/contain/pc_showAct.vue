@@ -1,30 +1,21 @@
-<template>
+﻿<template>
 	<div class="showAct leftCont">
 		<h3>显示活动列表</h3>
-		<div class="search" id="searchBar">
-			<span>显示活动类别：</span>
-			<select name="actType">
-				<option value="all" selected="selected">全部</option>
-				<option value="t2">学术讲座</option>
-				<option value="t3">科技创新</option>
-				<option value="t4">文化活动</option>
-				<option value="t5">科学竞赛</option>
-				<option value="t6">学术讲座</option>
-				<option value="t7">名著阅读</option>
-				<option value="t8">创业教育</option>
-				<option value="t9">考试预约</option>
-			</select>
+		<div class="search">
+			<span @click="getActAll">显示所有</span>
 			<p>
-				<img class="none" src="/img/font/search.svg" v-show="isShow" />
-				<input type="text" id="input" v-show="isShow" autofocus="autofocus" />
-				<img class="none" v-show="isShow" @click="clear" src="/img/font/no.svg" />
-				<span @click="toShow" v-show="!isShow"><img src="/img/font/search.svg"/><b>搜索</b></span>
-
+				<select name="searchType" v-model="search">
+					<option value="id">通过id查询</option>
+					<option value="name">通过名称查询</option>
+					<option value="genre">通过类别查询</option>
+					<option value="address">通过地址查询</option>
+				</select>
+				<input type="text" v-model="val"/>
+				<img src="/img/font/search.svg" @click="searchVal"/>
+				<img @click="clear" src="/img/font/no.svg" />
 			</p>
-			<em @click="notShow" v-show="isShow">取消</em>
 			<strong><img src="/img/font/add.svg" title="新增" @click="toAddAct()"/></strong>
 		</div>
-
 		<div class="listShow">
 			<table border="1" cellspacing="0" cellpadding="1">
 				<tr>
@@ -48,14 +39,10 @@
 					<!--<td @click="toDelete" class="toDelete">删除</td>-->
 				</tr>
 			</table>
-			
-			
 		</div>
-		<!-- 删除框 -->
-		<div class="message" v-show="isDelete">
-			<h3>提示</h3>
-			<b>您确定删除这条记录吗？</b>
-			<p><span>确认</span><span  @click="toDelete">取消</span></p>		
+		<!-- 提示信息 -->
+		<div class="message" v-show="isError">
+			<p v-text="message"></p>
 		</div>
 		<xpage :total-pages="page" :total="total" :current-page="current"  @pagechanged="onPageChange" v-show="total>9"/>
 	</div>
@@ -68,7 +55,9 @@
 		data() {
 			return {
 				isShow: false,
-				isDelete:false,
+				//提示信息
+				message:'',
+				isError:false,
 				arr:'',
 				//当前的页码
 				current:1,
@@ -76,12 +65,18 @@
 				total:0,
 				//当前数据的总页数
 				page:1,
-				id:''
+				id:'',
+				//搜索方式
+				search:'id',
+				//input框内容
+				val:'',
+				//判断是否为搜索的分页显示
+				isPage:0
 			}
 		},
 		methods: {
 			clear() {
-				$("#input").val("")
+				this.val = '';
 			},
 			notShow() {
 				this.isShow = false;
@@ -95,63 +90,210 @@
 			toDelete(){
 				this.isDelete = !this.isDelete;
 			},
-			onPageChange(page) {
-		      	console.log(page)
-		      	this.current = page;
-		      	var _this = this;
+			//根据活动的名称，类别或举行地址查询活动信息
+			getActByOther(name,genre,address,mess,numPage){
+				var _this = this;
 				var arr = [];
-		     	 $.ajax({
+				$.ajax({
 					type:"post",
-					url:"http://localhost:3000/getAct",
+					url:"http://localhost:3000/getActByOther",
+					async:true,
 					data:{
-						start:(page-1)*9
+						start:numPage,
+						name:name,
+						genre:genre,
+						address:address
 					},
 					success(data){
 						data = JSON.parse(data);
 						if(data.length!=0){
-							for (var i in data) {
+							for(var i in data){
 								arr.push(data[i])
 							}
+							_this.arr = arr;
+						}else{
+							_this.isError = true;
+							_this.message = mess;
+							setTimeout(function(){
+								_this.isError = false;
+								_this.message = '';
+							},1000)
 						}
-						_this.arr = arr;
 					}
 				});
-		    }
+				$.ajax({
+					type:"post",
+					url:"http://localhost:3000/getActByOtherTotal",
+					data:{
+						name:name,
+						genre:genre,
+						address:address
+					},
+					success(data){
+						data = JSON.parse(data);
+						_this.total = data[0].total;
+						console.log(_this.total)
+						_this.page = Math.ceil(_this.total/9)
+					}
+				});
+			},
+			//获取所有的活动信息
+			getActAll(){
+				this.isPage = 0;
+				this.val = '';
+				var _this = this;
+				var arr = [];
+				$.ajax({
+					type:"post",
+					url:"http://localhost:3000/getActTotal",
+					async:true,
+					success(data){
+						data = JSON.parse(data);
+						_this.total = data[0].total;
+						_this.page = Math.ceil(_this.total/9);
+						_this.isPage = 0;
+					}
+				});
+				$.ajax({
+					type:"post",
+					url:"http://localhost:3000/getAct",
+					async:true,
+					data:{
+						start:0
+					},
+					success(data){
+						data = JSON.parse(data);
+	//					console.log(data)
+						if(data.length!=0){
+							for(var i in data){
+								arr.push(data[i])
+							}
+							_this.arr = arr;
+						}
+					}
+				});
+			},
+			//input框改变内容搜索
+			searchVal(){
+				var way = this.search;
+				var _this = this;
+				var arr = [];
+				if(this.val.length!=0){
+					switch(way){
+						case 'id':
+							if(/^[0-9]*$/.test(this.val)){
+								$.ajax({
+									type:"post",
+									url:"http://localhost:3000/getActById",
+									async:true,
+									data:{
+										id:parseInt(this.val)
+									},
+									success(data){
+										data = JSON.parse(data);
+										if(data.length!=0){
+											for(var i in data){
+												arr.push(data[i])
+											}
+											_this.arr = arr;
+											_this.total = 1;
+											_this.page = 1;
+										}else{
+											_this.isError = true;
+											_this.message = '无该编号存在！';
+											setTimeout(function(){
+												_this.isError = false;
+												_this.message = '';
+											},1000)
+										}
+									}
+								});
+							}
+						break;
+						case 'name':
+							this.getActByOther(this.val,'','','该名称活动不存在!',0);
+						break;
+						case 'genre':
+							this.getActByOther('',this.val,'','该类别无活动信息!',0);
+						break;
+						default:
+							this.getActByOther('','',this.val,'该地址无活动举行!',0);
+						break;
+					}
+					this.isPage = 1;
+				}
+			},
+			onPageChange(page) {
+		      	this.current = page;
+		      	console.log(this.current)
+		      	var _this = this;
+				var arr = [];
+				if(this.isPage==0){
+					$.ajax({
+						type:"post",
+						url:"http://localhost:3000/getAct",
+						data:{
+							start:(page-1)*9
+						},
+						success(data){
+							data = JSON.parse(data);
+							if(data.length!=0){
+								for (var i in data) {
+									arr.push(data[i])
+								}
+							}
+							_this.arr = arr;
+						}
+					});
+				}else{
+					switch (this.search){
+						case 'id':
+							if(/^[0-9]*$/.test(this.val)){
+								$.ajax({
+									type:"post",
+									url:"http://localhost:3000/getActById",
+									async:true,
+									data:{
+										id:parseInt(this.val)
+									},
+									success(data){
+										data = JSON.parse(data);
+										if(data.length!=0){
+											for(var i in data){
+												arr.push(data[i])
+											}
+											_this.arr = arr;
+											_this.total = 1;
+											_this.page = 1;
+										}else{
+											_this.isError = true;
+											_this.message = '无该编号存在！';
+											setTimeout(function(){
+												_this.isError = false;
+												_this.message = '';
+											},1000)
+										}
+									}
+								});
+							}
+						case 'name':
+							this.getActByOther(this.val,'','','该名称活动不存在!',(page-1)*9);
+						break;
+						case 'genre':
+							this.getActByOther('',this.val,'','该类别无活动信息!',(page-1)*9);
+						break;
+						default:
+							this.getActByOther('','',this.val,'该地址无活动举行!',(page-1)*9);
+						break;	break;
+					}
+				}
+		   	}
 		},
 		components:{
 			xpage
 		},
 		mounted(){
-			var _this = this;
-			var arr = [];
-			$.ajax({
-				type:"post",
-				url:"http://localhost:3000/getActTotal",
-				async:true,
-				success(data){
-					data = JSON.parse(data);
-					_this.total = data[0].total;
-					_this.page = Math.ceil(_this.total/9)
-				}
-			});
-			$.ajax({
-				type:"post",
-				url:"http://localhost:3000/getAct",
-				async:true,
-				data:{
-					start:0
-				},
-				success(data){
-					data = JSON.parse(data);
-//					console.log(data)
-					if(data.length!=0){
-						for(var i in data){
-							arr.push(data[i])
-						}
-						_this.arr = arr;
-					}
-				}
-			});
+			this.getActAll()
 		}
 	}
 </script>
@@ -175,101 +317,6 @@
 		font:18px/44px "微软雅黑";
 		margin: 0;
 	}
-	/*搜索栏样式设置*/
-	
-	.search {
-		width: 100%;
-		height: 40px;
-		box-sizing: border-box;
-		padding: 5px 10px;
-	}
-	
-	.search span {
-		float: left;
-		font: 14px/30px "微软雅黑";
-	}
-	/*下拉菜单*/
-	
-	select {
-		float: left;
-		height: 30px;
-		background-color: rgba(0, 0, 0, 0);
-		font: 14px/30px "微软雅黑";
-		color: #fff;
-	}
-	select option{
-		color: #000000;
-	}
-	/*搜索框*/
-	
-	.search p {
-		float: left;
-		width: 300px;
-		height: 22px;
-		border: 1px solid #fff;
-		border-radius: 14px;
-		position: relative;
-		padding: 0 10px;
-		margin: 3px 10px 3px 70px;
-		/*margin: 0 auto;*/
-	}
-	
-	.search p img {
-		float: left;
-		width: 16px;
-		height: 16px;
-		margin-top: 3px;
-	}
-	
-	.search em {
-		cursor: pointer;
-		font-style: normal;
-		font: 12px/28px "微软雅黑";
-	}
-	/*定位样式*/
-	
-	.search p span {
-		position: absolute;
-		width: 100%;
-		height: 16px;
-		font: 12px/15px "微软雅黑";
-		margin-top: 3px;
-		left: 0;
-		text-align: center;
-	}
-	
-	.search p span img {
-		float: none;
-		vertical-align: text-bottom;
-		margin: 0;
-	}
-	
-	.search p span b {
-		padding-left: 5px;
-	}
-	/*搜索框*/
-	
-	.search p input {
-		float: left;
-		width: 255px;
-		height: 22px;
-		padding-left: 5px;
-		background-color: rgba(255, 255, 255, 0);
-	}
-	/*新增按钮样式*/
-	
-	.search strong {
-		float: right;
-		width: 20px;
-		height: 20px;
-		margin: 5px 0;
-	}
-	
-	.search strong img {
-		border: 0;
-		width: 100%;
-		cursor: pointer;
-	}
 	
 	.showAct table {
 		width: 100%;
@@ -281,48 +328,24 @@
 	.showAct table tr {
 		height: 28px;
 	}
-	/*删除弹出*/
-	.message{
+	/*提示信息*/
+    .message{
 		position: absolute;
-		width: 200px;height: 130px;
-		top: 50%;margin-top: -75px;
-		left: 50%;margin-left: -100px;
-		background-color: #fff;
-	}
-	.message h3{
-		width: 100%;
-		height: 30px;
-		box-sizing: border-box;
-		padding-left: 15px;
-		background-color: rgba(255,100,0,0.4);
-		font:14px/30px "微软雅黑";
-	}
-	.message b{
-		display: block;
-		width: 100%;height: 50px;
-		font:14px/50px "微软雅黑";
-		text-align: center;
-		color: #FFA500;
+		z-index: 5;
+		width: 280px;
+		top: 40%;left: 50%;
+		margin-left: -140px;
+		border-radius: 5px;
+		background-color: red;
 	}
 	.message p{
-		width: 110px;height: 30px;
-		margin: 0 auto;
-	}
-	.message span{
-		float: left;
-		margin-left: 10px;
-		width: 40px;
-		background-color: rgba(255,100,0,0.4);
-		font:14px/30px "微软雅黑";
+		width: 250px;height: 100%;
+		padding: 15px;
+		font:bold 18px/30px "微软雅黑";
+		color: white;
+		border:none;
 		text-align: center;
-		cursor: pointer;
 	}
-	/*.listShow{
-		    width: 100%;
-    height: 400px;
-    overflow: auto;
-    overflow-x: hidden;
-	}*/
 	/*删除按钮样式*/
 	.toDelete{
 		cursor: pointer;
@@ -330,5 +353,65 @@
 	/*超链接样式*/
 	a{
 		color: #fff;
+	}
+	/*搜索边框样式及位置设置*/
+	.search{
+		width: 100%;height: 28px;
+		margin: 4px 0;
+	}
+	.search p{
+		float: left;
+		width: 450px;
+		height: 26px;
+		font:14px/24px "微软雅黑";
+		padding: 0 10px;
+		border-radius: 15px;
+		border:1px solid #fff;
+	}
+	/*搜索下拉菜单样式设置*/
+	.search select{
+		float: left;
+		height: 24px;
+		background-color: rgba(0, 0, 0, 0);
+		font: 14px/24px "微软雅黑";
+		color: #fff;
+	}
+	.search option{
+		color: #000;
+	}
+	/*搜索框设置*/
+	.search input{
+		float: left;
+		width: 282px;
+		height: 24px;
+		padding-left: 5px;
+		background-color: rgba(255, 255, 255, 0);
+	}
+	/*图标设置*/
+	.search p img {
+		float: left;
+		width: 20px;
+		height: 20px;
+		margin: 2px 0;
+		margin-left: 7px;
+	}
+	/*添加设置*/
+	.search strong{
+		float: right;
+		width: 20px;
+		height: 20px;
+		margin: 2px 0;
+	}
+	.search strong img{
+		border: 0;
+		width: 100%;
+		cursor: pointer;
+	}
+	/*显示所有按钮显示*/
+	.search span{
+		cursor: pointer;
+		/*float: left;*/
+		margin-left: 10px;
+		font:14px/26px "微软雅黑";
 	}
 </style>

@@ -3,8 +3,9 @@
 		<xheader />
 		<div class="content">
 			<div class="title">
-				<p><span>你好，wmtimes!</span><img src="/img/font/exit.svg" @click="exit"/></p>
-				<em>站内公告：【维护】进行维护通知</em>
+				<p><span>你好，{{name}}!</span></p>
+				<img src="/img/font/exit.svg" @click="exit"/>
+				<!--<em>站内公告：【维护】进行维护通知</em>-->
 			</div>
 			<div class="cont">
 				<xlist />
@@ -21,7 +22,13 @@
 	import xfooter from "../pc-footer.vue";
 	import xheader from "../pc-header.vue";
 	import xlist from "../pc-list.vue";
+	import $ from 'jQuery';
 	export default{
+		data(){
+			return{
+				name:''
+			}
+		},
 		components:{
 			xheader,
 			xfooter,
@@ -36,8 +43,22 @@
 		},
 		mounted(){
 			var state = sessionStorage.getItem("state");
+			var id = localStorage.getItem("name");
+			var _this = this;
 			if(state == 'false'){
 				location.href = '#/';
+			}else{
+				$.ajax({
+					type:"post",
+					url:"http://localhost:3000/getManById",
+					data:{
+						id:id
+					},
+					success(data){
+						data = JSON.parse(data);
+						_this.name = data[0].man_name
+					}
+				});
 			}
 		}
 	}
@@ -59,8 +80,10 @@
 		background-color: rgba(255,100,0,0.3);
 	}
 	.title img{
-		width: 20px;
-		vertical-align: text-bottom;
+		float: right;
+		width: 20px;height: 20px;
+		margin-top: 15px;
+		/*vertical-align: text-bottom;*/
 	}
 	.title p{
 		float: left;

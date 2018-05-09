@@ -9,7 +9,6 @@
 				<ol v-show="num==1">
 					<li><a href="#/index/addAct">新增活动</a></li>
 					<li><a href="#/index/showAct">显示活动信息</a></li>
-					<li><a href="#/index/educeAct">导出活动信息</a></li>
 					<li><a href="#/index/genre">活动类别管理</a></li>
 				</ol>
 			</li>
@@ -21,7 +20,6 @@
 				<ol v-show="num==2">
 					<li><a href="#/index/addEnroll">新增报名表</a></li>
 					<li><a href="#/index/showEnroll">查询报名表</a></li>
-					<li><a href="#/index/educeEnroll">导出报名表</a></li>
 				</ol>
 			</li>
 			<li>
@@ -31,7 +29,6 @@
 				</p>
 				<ol v-show="num==3">
 					<li><a href="#/index/showSign">查询签到情况</a></li>
-					<li><a href="#/index/educeSign">导出签到信息</a></li>
 				</ol>
 			</li>
 			<li v-show="status">
