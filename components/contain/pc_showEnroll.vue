@@ -22,7 +22,7 @@
 				<th>总人数</th>
 				<th>截止时间</th>
 				<th>报名率</th>
-				<th colspan="2">操作</th>
+				<th colspan="3">操作</th>
 			</tr>
 			<tr v-for="v in arr">
 				<td>{{v.mes_id}}</td>
@@ -33,9 +33,33 @@
 				<td>{{parseInt(v.len/v.act_num*100)}}%</td>
 				<td><router-link :to="'/index/detailEnroll/'+v.mes_id">详情</router-link></td>
 				<td><router-link :to="'/index/changeEnroll/'+v.mes_id">编辑</router-link></td>
+				<!--<td @click="useqrcode(v.mes_id,v.act_name)">二维码</td>-->
+				<td @click="setQrcode(v.mes_id,v.act_name)">二维码</td>
 			</tr>
 		</table>
-		
+		<!-- 二维码 -->
+		<div class="showQrcode" v-show="qrcodeShow">
+			<!--<canvas id="canvas"></canvas>-->
+			<img id="imgId" src="" /> 
+			<p>
+				<b @click="downloadQrcode('pic')">下载</b>
+				<strong @click="showQrcode">关闭</strong>
+			</p>
+		</div>
+		<!--<div v-show="qrcodeUrl" class="response">
+			<qrcode 
+			:value="qrcodeUrl" 
+			v-if="qrcodeUrl" 
+			:options="{ size: 200 }" id="canvas">
+			</qrcode>
+			<p @click="beImg($event)">请使用支付宝扫码支付</p>
+			<img id="imgId" src="" />  
+		</div>-->
+		<!--<div class="response">
+					<canvas id="canvas"></canvas>
+					<i></i>
+					
+				</div><img id="imgId" src="" /> -->
 		<!-- 提示信息 -->
 		<div class="message" v-show="isError">
 			<p v-text="message"></p>
@@ -47,6 +71,10 @@
 
 <script>
 	import $ from 'jQuery';
+	import Vue from 'vue';
+	import QRCode from 'qrcode';
+	Vue.use(QRCode);
+//	import Qrcode from '@xkeshi/vue-qrcode';
 	import xpage from "../pc_page.vue";
 	export default {
 		data() {
@@ -69,11 +97,14 @@
 				//input框内容
 				val:'',
 				//判断是否为搜索的分页显示
-				isPage:0
+				isPage:0,
+				qrcodeShow:false
+//				qrcodeUrl:''
 			}
 		},
 		components:{
 			xpage
+//			qrcode: Qrcode
 		},
 		methods: {
 			clear() {
@@ -230,7 +261,45 @@
 						_this.arr = arr;
 					}
 				});
-		    }
+		    },
+		    //生成二维码
+		    setQrcode(id,name){
+		    	this.qrcodeShow = !this.qrcodeShow;
+		    	var img = document.getElementById('imgId');
+		    	var str = id+' '+name;
+		    	QRCode.toDataURL(str,function (err, url){
+		    		img.src = url;
+		    	})
+		    },
+		    downloadQrcode(name){
+		    	var a = document.createElement('a');
+		    	var event = new MouseEvent('click');
+		    	a.download = name;
+		    	a.href = $('#imgId').attr('src');
+		    	a.dispatchEvent(event);
+		    },
+		   	showQrcode(){
+		   		this.qrcodeShow = !this.qrcodeShow;
+		   	}
+		   //二维码
+//		    useqrcode(id,name){
+//				var canvas = document.getElementById('canvas');
+//				var imgId = document.getElementById('imgId');
+//				var str = id + ' ' + name;
+//				console.log(canvas,str)
+//				QRCode.toCanvas(canvas,str,{width:400}, function (error) {
+//					if (error) console.error(error)
+//				})
+//				QRCode.toDataURL(str,function (err, url) {
+//					imgId.src = url;
+//					var a = document.createElement('a');
+//					var event = new MouseEvent('click')
+//					a.download = str;
+//					a.href = url;
+//console.log(url) ;
+//a.dispatchEvent(event)
+//})
+//			},
 		},
 		mounted(){
 			this.getMesAll();
@@ -361,5 +430,36 @@
 	}
 	.pointer{
 		cursor: pointer;
+	}
+	/*二维码显示样式*/
+	.showQrcode{
+		position: absolute;
+		width: 200px;height: 240px;
+		top: 50%;margin-top: -120px;
+		left: 50%;margin-left: -100px;
+		background-color: #fff;
+		color: #333;
+		padding: 10px;
+	}
+	.showQrcode img{
+		width: 200px;
+	}
+	.showQrcode p{
+		height: 30px;
+		margin-top: 10px;
+		padding: 0 25px;
+		color: #fff;
+	}
+	.showQrcode p b{
+		float: left;
+		cursor: pointer;
+		padding: 5px;
+		background-color: rgba(255,100,0,0.7);
+	}
+	.showQrcode p strong{
+		float: right;
+		cursor: pointer;
+		padding: 5px;
+		background-color: rgba(255,100,0,0.7);
 	}
 </style>
