@@ -65,6 +65,7 @@
 								var status = data[0].man_type;
 								sessionStorage.setItem("state",true);
 								sessionStorage.setItem("status",status);
+								sessionStorage.setItem('num',1);
 								location.href = '#/index'
 							}else{
 								sessionStorage.setItem("state",false);
@@ -192,6 +193,7 @@
 		color: #fff;
 		border-radius: 4px;
 		background: rgba(255, 100, 0, 0.3);
+		cursor: pointer;
 	}
 	/*透明三角形*/
 	

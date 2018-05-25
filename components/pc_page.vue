@@ -113,7 +113,6 @@
 
 <style scoped="scoped">
 	/*分页样式*/
-	
 	.page {
 		height: 26px;
 		margin: 10px auto 0;
@@ -131,6 +130,7 @@
 		font-style: normal;
 		border: 1px solid #666;
 		margin-left: 5px;
+		
 		/*cursor: pointer;*/
 	}
 	

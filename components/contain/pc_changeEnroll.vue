@@ -45,9 +45,8 @@
 </template>
 
 <script>
-	import 'babel-polyfill'; //因为使用了es6的一些方法，需要babel垫片，如果你项目中已有相关兼容性方案，可忽略
-//	import Vue from 'vue';
-	import myDatepicker from 'vue-datepicker-simple/datepicker-2.vue'; //引入对应的组件
+	import 'babel-polyfill';
+	import myDatepicker from 'vue-datepicker-simple/datepicker-2.vue'; 
 	import $ from 'jQuery'
 	export default{
 		data(){
@@ -95,6 +94,17 @@
 					_this.hours2 = data[0].mes_stop.split(' ')[1].split(':')[0];
 					_this.minute1 = data[0].mes_begin.split(' ')[1].split(':')[1];
 					_this.minute2 = data[0].mes_stop.split(' ')[1].split(':')[1];
+					var day = Date.parse(_this.date2);
+					var day1 = Date.parse(new Date());
+					if(day1>day){
+						_this.isError = true;
+						_this.message = '活动报名已截止，信息不可修改';
+						setTimeout(function(){
+							_this.isError = false;
+							_this.message = '';
+							location.href = '#/index/showEnroll'
+						},2000)
+					}
 				}
 			});
 		},

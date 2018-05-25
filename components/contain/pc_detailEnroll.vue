@@ -16,16 +16,24 @@
 				<td>{{a.aca_name}}</td>
 				<td>{{a.major_name}}</td>
 			</tr>
-			
 		</table>
+		
+		<xpage :total-pages="page" :total="total" :current-page="current" @pagechanged="onPageChange" v-show="total>9" />
 	</div>
 </template>
 
 <script>
 	import $ from 'jQuery';
+	import xpage from "../pc_page.vue";
 	export default {
 		data() {
 			return {
+				//当前的页码
+				current: 1,
+				//数据的总条数
+				total: 0,
+				//当前数据的总页数
+				page: 1,
 				isShow: false,
 				isDelete:false,
 				arr:''
@@ -46,29 +54,58 @@
 			},
 			toDelete(){
 				this.isDelete = !this.isDelete;
+			},
+			onPageChange(page) {
+				this.current = page;
+				this.getEnroll(page);
+			},
+			getEnroll(start){
+				var arr = [];
+				var _this = this;
+				var id = this.$route.params.id;
+				if(start == 0) {
+					start = 1;
+				}
+				$.ajax({
+					type:"post",
+					url:"http://localhost:3000/detailEnrollById",
+					data:{
+						id:id,
+						start:(start - 1) * 9
+					},
+					success(data){
+						data = JSON.parse(data)
+						if(data.length!=0){
+							for (var i in data) {
+								arr.push(data[i])
+							}
+							_this.arr = arr;
+						}
+					},
+				});
+			},
+			getLen(){
+				var _this = this;
+				$.ajax({
+					type:"post",
+					url:"http://localhost:3000/detailEnrollByIdTotal",
+					data:{
+						id:this.$route.params.id
+					},
+					success(data){
+						data = JSON.parse(data)
+						_this.total = data[0].total;
+						_this.page = Math.ceil(_this.total / 9);
+					},
+				});
 			}
 		},
+		components: {
+			xpage
+		},
 		mounted(){
-			var arr = [];
-			var _this = this;
-			var id = this.$route.params.id;
-			$.ajax({
-				type:"post",
-				url:"http://localhost:3000/detailEnrollById",
-				data:{
-					id:id
-				},
-				success(data){
-					data = JSON.parse(data)
-					if(data.length!=0){
-						for (var i in data) {
-							arr.push(data[i])
-						}
-						_this.arr = arr;
-					}
-					console.log(data)
-				},
-			});
+			this.getEnroll(0);
+			this.getLen();
 		}
 	}
 </script>
@@ -83,6 +120,7 @@
 		color: #fff;
 		margin-right: 10px;
 		background-color: rgba(255, 100, 0, 0.3);
+		position: relative;
 	}
 	h3{
 		width: 100%;

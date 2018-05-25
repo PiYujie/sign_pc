@@ -98,7 +98,6 @@
 					},
 					success(data){
 						data = JSON.parse(data);
-						console.log(data)
 						if(data.length!=0){
 							for (var i in data) {
 								arr.push(data[i])

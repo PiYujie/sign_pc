@@ -246,7 +246,6 @@ connect.connect();
 //		console.log('获取报名表条数')
 		connect.query(`UPDATE message SET mes_begin='${req.body.btime}',mes_stop='${req.body.stime}',is_sign=${req.body.sign} WHERE mes_id = ${req.body.id}`, function(error, results, fields) {
 			if(error) throw error;
-			console.log(req .body)
 			res.send(JSON.stringify(results));
 		});
 	})
@@ -319,7 +318,19 @@ connect.connect();
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
 //		console.log('获取所有报名表信息')
-		connect.query(`SELECT enroll.enr_id, enroll.stu_id,student.stu_name,academy.aca_name,major.major_name  FROM enroll,student,academy,major WHERE academy.aca_id = student.academy AND major.major_id = student.major AND enroll.mes_id = ${req.body.id} AND enroll.stu_id = student.stu_id`, function(error, results, fields) {
+		connect.query(`SELECT enroll.enr_id, enroll.stu_id,student.stu_name,academy.aca_name,major.major_name  FROM enroll,student,academy,major WHERE academy.aca_id = student.academy AND major.major_id = student.major AND enroll.mes_id = ${req.body.id} AND enroll.stu_id = student.stu_id LIMIT ${req.body.start},9`, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
+	//通过id查询对应活动的报名人详情 
+	app.post("/detailEnrollByIdTotal",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+//		console.log('获取所有报名表信息')
+		connect.query(`SELECT COUNT(stu_id) total FROM enroll WHERE enroll.mes_id = ${req.body.id}`, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
 			res.send(JSON.stringify(results));
@@ -385,38 +396,91 @@ connect.connect();
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
 //		console.log('获取签到详情')
-		connect.query(`SELECT student.stu_id,student.stu_name,student.grade,student.classes,academy.aca_name,major.major_name,enroll.sign_state FROM student,academy,major,enroll WHERE enroll.mes_id = ${req.body.id} AND student.stu_id = enroll.stu_id AND student.academy = academy.aca_id AND student.major = major.major_id LIMIT  ${req.body.start},9`, function(error, results, fields) {
+		connect.query(`SELECT student.stu_id,student.stu_name,grade.gra_name,student.classes,academy.aca_name,major.major_name,enroll.sign_state FROM student,academy,major,enroll,grade WHERE enroll.mes_id = ${req.body.id} AND student.stu_id = enroll.stu_id AND student.academy = academy.aca_id AND grade.gra_id = student.grade AND student.major = major.major_id LIMIT  ${req.body.start},9`, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
 			res.send(JSON.stringify(results));
 		});
 	})
-	//根据id显示所有已签到详情
-	app.post("/getSignById1",function(req,res){
+	//根据id及签到情况显示详情
+	app.post("/getSignByIdState",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+		connect.query(`SELECT student.stu_id,student.stu_name,grade.gra_name,student.classes,academy.aca_name,major.major_name,enroll.sign_state FROM student,academy,major,enroll,grade WHERE enroll.mes_id = ${req.body.id} AND student.stu_id = enroll.stu_id AND student.academy = academy.aca_id AND student.major = major.major_id AND grade.gra_id = student.grade AND enroll.sign_state = ${req.body.state} LIMIT  ${req.body.start},9`, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
+	//根据id查询数量
+	app.post("/getSignByIdTotal",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+		connect.query(`SELECT COUNT(mes_id) total from enroll WHERE enroll.mes_id = ${req.body.id}`, function(error, results, fields) {
+			if(error) throw error;
+			res.send(JSON.stringify(results));
+		});
+	})
+	//根据id查询数量
+	app.post("/getSignByStateTotal",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+		connect.query(`SELECT COUNT(mes_id) total from enroll WHERE enroll.mes_id = ${req.body.id} AND enroll.sign_state = ${req.body.state}`, function(error, results, fields) {
+			if(error) throw error;
+			res.send(JSON.stringify(results));
+		});
+	})
+	//根据id显示所有签到情况
+	app.post("/getSignByIdAll",function(req,res){
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
 //		console.log('获取签到详情')
-		connect.query(`SELECT student.stu_id,student.stu_name,student.grade,student.classes,academy.aca_name,major.major_name,enroll.sign_state FROM student,academy,major,enroll WHERE enroll.mes_id = ${req.body.id} AND student.stu_id = enroll.stu_id AND student.academy = academy.aca_id AND student.major = major.major_id AND enroll.sign_state = 1 LIMIT  ${req.body.start},9`, function(error, results, fields) {
+		connect.query(`SELECT student.stu_id,student.stu_name,grade.gra_name,student.classes,academy.aca_name,major.major_name,enroll.sign_state FROM student,academy,major,enroll,grade WHERE enroll.mes_id = ${req.body.id} AND student.stu_id = enroll.stu_id AND student.academy = academy.aca_id AND grade.gra_id = student.grade AND student.major = major.major_id `, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
 			res.send(JSON.stringify(results));
 		});
 	})
-	//根据id显示所有未签到详情
-	app.post("/getSignById2",function(req,res){
+	//根据id显示所有签到情况
+	app.post("/getSignByStateAll",function(req,res){
 		//解决跨域问题
 		res.append("Access-Control-Allow-Origin","*");
 		//连接后执行相应功能
 //		console.log('获取签到详情')
-		connect.query(`SELECT student.stu_id,student.stu_name,student.grade,student.classes,academy.aca_name,major.major_name,enroll.sign_state FROM student,academy,major,enroll WHERE enroll.mes_id = ${req.body.id} AND student.stu_id = enroll.stu_id AND student.academy = academy.aca_id AND student.major = major.major_id AND enroll.sign_state = 0 LIMIT  ${req.body.start},9`, function(error, results, fields) {
+		connect.query(`SELECT student.stu_id,student.stu_name,grade.gra_name,student.classes,academy.aca_name,major.major_name,enroll.sign_state FROM student,academy,major,enroll,grade WHERE enroll.mes_id = ${req.body.id} AND student.stu_id = enroll.stu_id AND student.academy = academy.aca_id AND grade.gra_id = student.grade AND student.major = major.major_id AND enroll.sign_state = ${req.body.state}`, function(error, results, fields) {
 			if(error) throw error;
 	//		console.log(results)
 			res.send(JSON.stringify(results));
 		});
 	})
-
-
+	//根据id显示所有签到情况
+	app.post("/getSignByIdSome",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+//		console.log('获取签到详情')
+		connect.query(`SELECT student.stu_id,student.stu_name,grade.gra_name,student.classes,academy.aca_name,major.major_name,enroll.sign_state FROM student,academy,major,enroll,grade WHERE enroll.mes_id = ${req.body.id} AND student.stu_id = enroll.stu_id AND student.academy = academy.aca_id AND grade.gra_id = student.grade AND student.major = major.major_id LIMIT ${req.body.begin},${req.body.end}`, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
+	//根据id显示所有签到情况
+	app.post("/getSignByStateSome",function(req,res){
+		//解决跨域问题
+		res.append("Access-Control-Allow-Origin","*");
+		//连接后执行相应功能
+//		console.log('获取签到详情')
+		connect.query(`SELECT student.stu_id,student.stu_name,grade.gra_name,student.classes,academy.aca_name,major.major_name,enroll.sign_state FROM student,academy,major,enroll,grade WHERE enroll.mes_id = ${req.body.id} AND student.stu_id = enroll.stu_id AND student.academy = academy.aca_id AND grade.gra_id = student.grade AND student.major = major.major_id AND enroll.sign_state = ${req.body.state} LIMIT ${req.body.begin},${req.body.end}`, function(error, results, fields) {
+			if(error) throw error;
+	//		console.log(results)
+			res.send(JSON.stringify(results));
+		});
+	})
 //----------------------------------------------------------------//
 
 //学生相关操作

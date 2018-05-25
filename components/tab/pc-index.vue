@@ -3,8 +3,12 @@
 		<xheader />
 		<div class="content">
 			<div class="title">
-				<p><span>你好，{{name}}!</span></p>
-				<img src="/img/font/exit.svg" @click="exit"/>
+				<span>{{name}} 你好，欢迎使用系统!</span>
+				<p @click="exit">
+					<img src="/img/font/exit.svg"/>
+					<span>退出</span>
+				</p>
+				
 				<!--<em>站内公告：【维护】进行维护通知</em>-->
 			</div>
 			<div class="cont">
@@ -80,17 +84,23 @@
 		background-color: rgba(255,100,0,0.3);
 	}
 	.title img{
-		float: right;
+		float: left;
 		width: 20px;height: 20px;
 		margin-top: 15px;
 		/*vertical-align: text-bottom;*/
 	}
 	.title p{
-		float: left;
-		padding-left: 10px;
+		float: right;
+		padding-right: 10px;
+		cursor: pointer;
 	}
 	.title p span{
-		padding-right: 20px;
+		float: right;
+		padding: 0 0 0 10px;
+	}
+	.title span{
+		float: left;
+		padding-left: 20px;
 	}
 	.title em{
 		float: right;

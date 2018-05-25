@@ -124,15 +124,15 @@
 									academy:this.academy,
 									major:this.major,
 									id:this.id_card,
-									bitrh:this.birth,
+									birth:this.birth,
 									classes:this.classes,
 									sex:sex,
 									pass:pass,
 									grade:this.grade
 								},
 								success(data){
-									this.isError = true;
-									this.message = '添加成功';
+									_this.isError = true;
+									_this.message = '添加成功';
 									setTimeout(function(){
 										_this.isError = false;
 										_this.message = '';

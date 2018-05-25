@@ -9,7 +9,6 @@ import moment from 'vue-moment'
 Vue.use(moment); 
 // 全局样式
 import "./template/base.css";
-import "./template/calendar.css";
 //选项卡组件
 //活动
 import addAct from "./components/contain/pc_addAct.vue";
